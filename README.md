@@ -29,7 +29,7 @@ JSSnippets creation by: https://github.com/AlexandreD3v/snippetGenerator/tree/JS
 - onRequest: Called when a Suitelet is accessed via a GET or POST request. The method can return a page object, a file object, or a string.;
 
 - MapReduce: Blank MapReduce with all methods;
-- MaprReduceNSSample: Map/Reduce sample from Netsuite Docs.;
+- MapReduceNSSample: Map/Reduce sample from Netsuite Docs.;
 - getInputData: Returns an array of input data to be processed;
 - map: Processes each input and returns intermediate results;
 - reduce: Groups intermediate results by key and returns final results;
