@@ -1,6 +1,7 @@
 # ns-js-snippets_reload
 Javascript snippets for Netsuite Suitescript devepeloment
 
+JSSnippets creation by: https://github.com/AlexandreD3v/snippetGenerator/tree/JSSnippets/ScriptTypes
 
 # Featured snippets:
 - ClientScript: Blank Clientscript with all methods;
@@ -41,3 +42,8 @@ Javascript snippets for Netsuite Suitescript devepeloment
 - post: Called on post request;
 - put: Called on put request;
 - _delete: Called on delete request;
+
+# TODO
+- Other script types;
+- N modules;
+- Known netsuite bugs;
