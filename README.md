@@ -4,6 +4,8 @@ Javascript snippets for Netsuite Suitescript devepeloment
 JSSnippets creation by: https://github.com/AlexandreD3v/snippetGenerator/tree/JSSnippets/ScriptTypes
 
 # Featured snippets:
+
+## ClientScript
 - ClientScript: Blank Clientscript with all methods;
 - ClientScriptHelloWorld: Simple hello world in a pageInit function;
 - ClientScriptNSSample: Sample from Netsuite Docs.;
@@ -16,6 +18,7 @@ JSSnippets creation by: https://github.com/AlexandreD3v/snippetGenerator/tree/JS
 - sublistChanged: Called when a sublist field is changed;
 - saveRecord: Called when a record is saved;
 
+## UserEvent
 - UserEvent: Blank Userevent with all methods;
 - UserEventHelloWorld: Simple hello world in a beforeLoad function showing a message with N/ui;
 - UserEventNsSample: Sample from Netsuite Docs.;
@@ -23,11 +26,13 @@ JSSnippets creation by: https://github.com/AlexandreD3v/snippetGenerator/tree/JS
 - beforeSubmit: Called before a record is saved;
 - afterSubmit: Called after a record is saved;
 
+## Suitelet
 - Suitelet: blank Suitelet script with onRequest method;
 - SuiteletHelloWorld: simple hello world showing a html; 
 - SuiteletNSSampleForm: sample conde from Netsuite Docs.;
 - onRequest: Called when a Suitelet is accessed via a GET or POST request. The method can return a page object, a file object, or a string.;
 
+## MapReduce
 - MapReduce: Blank MapReduce with all methods;
 - MapReduceNSSample: Map/Reduce sample from Netsuite Docs.;
 - getInputData: Returns an array of input data to be processed;
@@ -35,6 +40,7 @@ JSSnippets creation by: https://github.com/AlexandreD3v/snippetGenerator/tree/JS
 - reduce: Groups intermediate results by key and returns final results;
 - summarize: Generates a summary report based on the results of the Map/Reduce job;
 
+## RESTlet
 - RESTlet: blank Suitelet script with all methods;
 - RESTletHelloWorld: hello world sample of RESTlet;
 - RESTletNsSample: Sample from Netsuite Doc.;
@@ -43,7 +49,32 @@ JSSnippets creation by: https://github.com/AlexandreD3v/snippetGenerator/tree/JS
 - put: Called on put request;
 - _delete: Called on delete request;
 
+## ScheduledScript
+ - scheduledscript;
+ - execute method;
+
+## MassUpdateScript
+ - massupdatescript;
+ - massupdatescript (each method);
+
+## Portlet
+ - portlet;
+ - render method;
+
+## WorkflowActionScript
+ - workflowactionscript;
+ - onAction method;
+
+## BundleInstallationScript
+ - bundleinstallationscript;
+
+## General
+ - define
+
+## N/record
+ - nRecordSamples
+
 # TODO
-- Other script types;
+- Script samples;
 - N modules;
 - Known netsuite bugs;
