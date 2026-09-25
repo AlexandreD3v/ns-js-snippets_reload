@@ -2,8 +2,8 @@
     "name": "ns-js-snippets-reload",
     "displayName": "Netsuite - JS Snippets Reload",
     "publisher": "alexandrejcorrea",
-    "description": "This extension contains code snippets for Netsuite Suitescripts developed with JavaScript",
-    "version": "0.1.0",
+    "description": "NetSuite SuiteScript 2.x snippets, N/* autocomplete, hover docs, diagnostics, and API pattern templates for JavaScript in VS Code.",
+    "version": "0.1.1",
     "engines": {
         "vscode": "^1.62.0"
     },
@@ -17,15 +17,43 @@
         "onLanguage:javascript"
     ],
     "categories": [
-        "Snippets"
+        "Snippets",
+        "Programming Languages"
     ],
+    "scripts": {
+        "test": "node test/ratingPrompt.test.js"
+    },
     "contributes": {
         "snippets": [
             {
                 "language": "javascript",
                 "path": "./snippets/snippets.code-snippets"
             }
-        ]
+        ],
+        "configuration": {
+            "title": "NetSuite SuiteScript",
+            "properties": {
+                "netsuite.defaultApiVersion": {
+                    "type": "string",
+                    "default": "2.1",
+                    "description": "Default @NApiVersion value used in future snippet templates."
+                },
+                "netsuite.defaultModuleScope": {
+                    "type": "string",
+                    "default": "SameAccount",
+                    "enum": [
+                        "SameAccount",
+                        "Public"
+                    ],
+                    "description": "Default @NModuleScope value used in future snippet templates."
+                },
+                "netsuite.enableDiagnostics": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show SuiteScript validation warnings in JavaScript files."
+                }
+            }
+        }
     },
     "devDependencies": {
         "vsce": "^2.2.0"

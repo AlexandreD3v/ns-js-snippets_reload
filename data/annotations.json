@@ -1,0 +1,92 @@
+[
+  {
+    "label": "@NApiVersion 2.x",
+    "insertText": "@NApiVersion 2.x",
+    "detail": "SuiteScript annotation",
+    "documentation": "Defines the SuiteScript API version for the file."
+  },
+  {
+    "label": "@NApiVersion 2.1",
+    "insertText": "@NApiVersion 2.1",
+    "detail": "SuiteScript annotation",
+    "documentation": "Defines the SuiteScript API version when using SuiteScript 2.1 features such as arrow functions."
+  },
+  {
+    "label": "@NModuleScope SameAccount",
+    "insertText": "@NModuleScope SameAccount",
+    "detail": "SuiteScript annotation",
+    "documentation": "Restricts module execution to the same NetSuite account."
+  },
+  {
+    "label": "@NModuleScope Public",
+    "insertText": "@NModuleScope Public",
+    "detail": "SuiteScript annotation",
+    "documentation": "Allows the module to be used across accounts (e.g. bundles)."
+  },
+  {
+    "label": "@NScriptType ClientScript",
+    "insertText": "@NScriptType ClientScript",
+    "detail": "SuiteScript annotation",
+    "documentation": "Marks the file as a Client Script."
+  },
+  {
+    "label": "@NScriptType UserEventScript",
+    "insertText": "@NScriptType UserEventScript",
+    "detail": "SuiteScript annotation",
+    "documentation": "Marks the file as a User Event Script."
+  },
+  {
+    "label": "@NScriptType Suitelet",
+    "insertText": "@NScriptType Suitelet",
+    "detail": "SuiteScript annotation",
+    "documentation": "Marks the file as a Suitelet."
+  },
+  {
+    "label": "@NScriptType Restlet",
+    "insertText": "@NScriptType Restlet",
+    "detail": "SuiteScript annotation",
+    "documentation": "Marks the file as a RESTlet."
+  },
+  {
+    "label": "@NScriptType MapReduceScript",
+    "insertText": "@NScriptType MapReduceScript",
+    "detail": "SuiteScript annotation",
+    "documentation": "Marks the file as a Map/Reduce script."
+  },
+  {
+    "label": "@NScriptType ScheduledScript",
+    "insertText": "@NScriptType ScheduledScript",
+    "detail": "SuiteScript annotation",
+    "documentation": "Marks the file as a Scheduled Script."
+  },
+  {
+    "label": "@NScriptType MassUpdateScript",
+    "insertText": "@NScriptType MassUpdateScript",
+    "detail": "SuiteScript annotation",
+    "documentation": "Marks the file as a Mass Update Script."
+  },
+  {
+    "label": "@NScriptType Portlet",
+    "insertText": "@NScriptType Portlet",
+    "detail": "SuiteScript annotation",
+    "documentation": "Marks the file as a Portlet script."
+  },
+  {
+    "label": "@NScriptType WorkflowActionScript",
+    "insertText": "@NScriptType WorkflowActionScript",
+    "detail": "SuiteScript annotation",
+    "documentation": "Marks the file as a Workflow Action Script."
+  },
+  {
+    "label": "@NScriptType BundleInstallationScript",
+    "insertText": "@NScriptType BundleInstallationScript",
+    "detail": "SuiteScript annotation",
+    "documentation": "Marks the file as a Bundle Installation Script."
+  },
+  {
+    "label": "@NAmdConfigPath",
+    "insertText": "@NAmdConfigPath ./",
+    "detail": "SuiteScript annotation",
+    "documentation": "Path to the AMD configuration file for custom module paths."
+  }
+]

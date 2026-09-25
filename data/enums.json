@@ -1,0 +1,113 @@
+{
+  "N/record": {
+    "Type": [
+      { "label": "CUSTOMER", "documentation": "Customer record type." },
+      { "label": "SALES_ORDER", "documentation": "Sales Order transaction type." },
+      { "label": "INVOICE", "documentation": "Invoice transaction type." },
+      { "label": "CASH_SALE", "documentation": "Cash Sale transaction type." },
+      { "label": "CREDIT_MEMO", "documentation": "Credit Memo transaction type." },
+      { "label": "ESTIMATE", "documentation": "Estimate/Quote transaction type." },
+      { "label": "VENDOR", "documentation": "Vendor record type." },
+      { "label": "PURCHASE_ORDER", "documentation": "Purchase Order transaction type." },
+      { "label": "VENDOR_BILL", "documentation": "Vendor Bill transaction type." },
+      { "label": "ITEM", "documentation": "Item record type." },
+      { "label": "INVENTORY_ITEM", "documentation": "Inventory Item record type." },
+      { "label": "NON_INVENTORY_ITEM", "documentation": "Non-inventory Item record type." },
+      { "label": "SERVICE_ITEM", "documentation": "Service Item record type." },
+      { "label": "EMPLOYEE", "documentation": "Employee record type." },
+      { "label": "JOURNAL_ENTRY", "documentation": "Journal Entry transaction type." },
+      { "label": "CONTACT", "documentation": "Contact record type." },
+      { "label": "LEAD", "documentation": "Lead record type." },
+      { "label": "OPPORTUNITY", "documentation": "Opportunity record type." },
+      { "label": "CASE", "documentation": "Support Case record type." },
+      { "label": "PARTNER", "documentation": "Partner record type." },
+      { "label": "LOCATION", "documentation": "Location record type." },
+      { "label": "SUBSIDIARY", "documentation": "Subsidiary record type." },
+      { "label": "DEPARTMENT", "documentation": "Department record type." },
+      { "label": "CLASSIFICATION", "documentation": "Class record type." },
+      { "label": "CUSTOM_RECORD", "documentation": "Custom record type (use with custom type id)." }
+    ]
+  },
+  "N/search": {
+    "Type": [
+      { "label": "CUSTOMER", "documentation": "Customer search type." },
+      { "label": "SALES_ORDER", "documentation": "Sales Order search type." },
+      { "label": "INVOICE", "documentation": "Invoice search type." },
+      { "label": "TRANSACTION", "documentation": "All transaction search type." },
+      { "label": "VENDOR", "documentation": "Vendor search type." },
+      { "label": "PURCHASE_ORDER", "documentation": "Purchase Order search type." },
+      { "label": "ITEM", "documentation": "Item search type." },
+      { "label": "EMPLOYEE", "documentation": "Employee search type." },
+      { "label": "CONTACT", "documentation": "Contact search type." },
+      { "label": "OPPORTUNITY", "documentation": "Opportunity search type." },
+      { "label": "CASE", "documentation": "Support Case search type." },
+      { "label": "JOURNAL_ENTRY", "documentation": "Journal Entry search type." }
+    ],
+    "Operator": [
+      { "label": "IS", "documentation": "Filter operator: equals." },
+      { "label": "ISNOT", "documentation": "Filter operator: not equal." },
+      { "label": "CONTAINS", "documentation": "Filter operator: contains." },
+      { "label": "DOESNOTCONTAIN", "documentation": "Filter operator: does not contain." },
+      { "label": "STARTSWITH", "documentation": "Filter operator: starts with." },
+      { "label": "ANYOF", "documentation": "Filter operator: any of the values." },
+      { "label": "NONEOF", "documentation": "Filter operator: none of the values." },
+      { "label": "GREATERTHAN", "documentation": "Filter operator: greater than." },
+      { "label": "LESSTHAN", "documentation": "Filter operator: less than." },
+      { "label": "BETWEEN", "documentation": "Filter operator: between two values." },
+      { "label": "ISNOTEMPTY", "documentation": "Filter operator: is not empty." },
+      { "label": "ISEMPTY", "documentation": "Filter operator: is empty." }
+    ]
+  },
+  "N/ui/serverWidget": {
+    "FieldType": [
+      { "label": "TEXT", "documentation": "Single-line text field." },
+      { "label": "TEXTAREA", "documentation": "Multi-line text field." },
+      { "label": "SELECT", "documentation": "Dropdown select field." },
+      { "label": "MULTISELECT", "documentation": "Multi-select field." },
+      { "label": "CHECKBOX", "documentation": "Checkbox field." },
+      { "label": "DATE", "documentation": "Date field." },
+      { "label": "DATETIME", "documentation": "Date and time field." },
+      { "label": "EMAIL", "documentation": "Email address field." },
+      { "label": "PHONE", "documentation": "Phone number field." },
+      { "label": "INTEGER", "documentation": "Integer number field." },
+      { "label": "FLOAT", "documentation": "Decimal number field." },
+      { "label": "CURRENCY", "documentation": "Currency amount field." },
+      { "label": "PERCENT", "documentation": "Percentage field." },
+      { "label": "INLINEHTML", "documentation": "Inline HTML content field." },
+      { "label": "RADIO", "documentation": "Radio button field." },
+      { "label": "URL", "documentation": "URL field." },
+      { "label": "FILE", "documentation": "File upload field." },
+      { "label": "IMAGE", "documentation": "Image field." },
+      { "label": "HELP", "documentation": "Help text field." },
+      { "label": "LABEL", "documentation": "Label-only field." }
+    ]
+  },
+  "N/log": {
+    "methods": [
+      { "label": "debug", "snippet": "debug({ title: '$1', details: $2 })", "documentation": "Write a debug log entry." },
+      { "label": "audit", "snippet": "audit({ title: '$1', details: $2 })", "documentation": "Write an audit log entry." },
+      { "label": "error", "snippet": "error({ title: '$1', details: $2 })", "documentation": "Write an error log entry." },
+      { "label": "emergency", "snippet": "emergency({ title: '$1', details: $2 })", "documentation": "Write an emergency log entry." }
+    ]
+  },
+  "N/runtime": {
+    "methods": [
+      { "label": "getCurrentScript", "snippet": "getCurrentScript()", "documentation": "Returns the current script object." },
+      { "label": "getCurrentUser", "snippet": "getCurrentUser()", "documentation": "Returns the current user object." },
+      { "label": "getCurrentSession", "snippet": "getCurrentSession()", "documentation": "Returns the current session object." },
+      { "label": "isFeatureInEffect", "snippet": "isFeatureInEffect({ feature: '$1' })", "documentation": "Checks if a NetSuite feature is enabled." },
+      { "label": "envType", "snippet": "envType", "documentation": "Returns the environment type (PRODUCTION, SANDBOX, etc.)." }
+    ],
+    "Script": [
+      { "label": "getParameter", "snippet": "getParameter({ name: '$1' })", "documentation": "Reads a script deployment parameter value." },
+      { "label": "getRemainingUsage", "snippet": "getRemainingUsage()", "documentation": "Returns remaining governance units." },
+      { "label": "id", "snippet": "id", "documentation": "Internal ID of the script." },
+      { "label": "deploymentId", "snippet": "deploymentId", "documentation": "Internal ID of the script deployment." }
+    ]
+  },
+  "N/error": {
+    "methods": [
+      { "label": "create", "snippet": "create({ name: '$1', message: '$2' })", "documentation": "Creates a SuiteScript error object." }
+    ]
+  }
+}

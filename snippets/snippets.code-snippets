@@ -457,7 +457,7 @@
           "/**",
           " * @NApiVersion 2.x",
           " * @NScriptType MapReduceScript",
-          " */",
+          " */"
       ],
       "description": "MapReduceAnnotation",
   },
@@ -472,12 +472,12 @@
           "define(['N/file'], function (file) {",
           "",
           "    // Define characters that should not be counted when the script performs its",
-          "    // analysis of the text.", 
-"    const PUNCTUATION_REGEXP = /[\u2000-\u206F\u2E00-\u2E7F\\'!\"#\$%&\(\)\*\+,\-\.\/:;<=>\?@\[\]\^_`\{\|\}~]/g;",
+          "    // analysis of the text.",
+          "    const PUNCTUATION_REGEXP = /[\u2000-\u206F\u2E00-\u2E7F\\\\'!\u0022#$%&()*+,./:;<=>?@\\[\\]^_`{|}~-]/g;",
           "",
           "    // Use the getInputData function to return two strings.",
           "    const getInputData = () => {",
-          "        return \"the quick brown fox \njumps over the lazy dog.\".split('\n');",
+          "        return \"the quick brown fox \\njumps over the lazy dog.\".split('\\n');",
           "    };",
           "",
           "    // After the getInputData function is executed, the system creates the following",
@@ -558,7 +558,7 @@
           "        var text = '';",
           "        var totalKeysSaved = 0;",
           "        context.output.iterator().each(function (key, value) {",
-          "            text += (key + ' ' + value + '\n');",
+          "            text += (key + ' ' + value + '\\n');",
           "            totalKeysSaved++;",
           "            return true;",
           "        });",
@@ -593,8 +593,7 @@
           "        reduce: reduce,",
           "        summarize: summarize",
           "    };",
-          "});",
-          "",
+          "});"
       ],
       "description": "MapReduceNSSample",
   },
@@ -1508,4 +1507,161 @@
       ],
       "description": "workflowactionscript",
   },
+  "nsSearch": {
+      "prefix": "nsSearch",
+      "body": [
+          "const ${1:transactionSearch} = search.create({",
+          "    type: search.Type.${2:TRANSACTION},",
+          "    filters: [",
+          "        ['${3:mainline}', search.Operator.IS, 'T'],",
+          "        'AND',",
+          "        ['${4:type}', search.Operator.ANYOF, '${5:SalesOrd}']",
+          "    ],",
+          "    columns: [",
+          "        search.createColumn({ name: '${6:tranid}' }),",
+          "        search.createColumn({ name: '${7:entity}' })",
+          "    ]",
+          "});",
+          "$0"
+      ],
+      "description": "Create a search with filters and columns"
+  },
+  "nsSearchRun": {
+      "prefix": "nsSearchRun",
+      "body": [
+          "${1:mySearch}.run().each((result) => {",
+          "    $0",
+          "    return true;",
+          "});"
+      ],
+      "description": "Run a search with paged each() loop"
+  },
+  "nsSearchGovernance": {
+      "prefix": "nsSearchGovernance",
+      "body": [
+          "const script = runtime.getCurrentScript();",
+          "",
+          "${1:mySearch}.run().each((result) => {",
+          "    if (script.getRemainingUsage() < ${2:100}) {",
+          "        log.audit({ title: 'Governance limit', details: 'Stopping early to preserve units.' });",
+          "        return false;",
+          "    }",
+          "",
+          "    $0",
+          "    return true;",
+          "});"
+      ],
+      "description": "Search each() loop with governance check"
+  },
+  "nsSublist": {
+      "prefix": "nsSublist",
+      "body": [
+          "const lineCount = ${1:rec}.getLineCount({ sublistId: '${2:item}' });",
+          "",
+          "for (let i = 0; i < lineCount; i++) {",
+          "    const ${3:itemId} = ${1:rec}.getSublistValue({",
+          "        sublistId: '${2:item}',",
+          "        fieldId: '${4:item}',",
+          "        line: i",
+          "    });",
+          "    $0",
+          "}"
+      ],
+      "description": "Iterate sublist lines and read a field value"
+  },
+  "nsParam": {
+      "prefix": "nsParam",
+      "body": [
+          "const ${1:paramValue} = runtime.getCurrentScript().getParameter({ name: '${2:custscript_my_param}' });"
+      ],
+      "description": "Read a script deployment parameter"
+  },
+  "nsTryCatch": {
+      "prefix": "nsTryCatch",
+      "body": [
+          "try {",
+          "    $0",
+          "} catch (e) {",
+          "    log.error({ title: '${1:Error}', details: e });",
+          "    throw error.create({ name: '${2:SCRIPT_ERROR}', message: e.message });",
+          "}"
+      ],
+      "description": "Try/catch block with N/log and N/error"
+  },
+  "nsGovernance": {
+      "prefix": "nsGovernance",
+      "body": [
+          "const remainingUsage = runtime.getCurrentScript().getRemainingUsage();",
+          "if (remainingUsage < ${1:100}) {",
+          "    log.audit({ title: 'Governance limit', details: `Remaining usage: \\${remainingUsage}` });",
+          "    $0",
+          "}"
+      ],
+      "description": "Check remaining governance units"
+  },
+  "nsSuiteletForm": {
+      "prefix": "nsSuiteletForm",
+      "body": [
+          "const form = serverWidget.createForm({ title: '${1:My Form}' });",
+          "",
+          "form.addField({",
+          "    id: 'custpage_${2:field}',",
+          "    type: serverWidget.FieldType.${3|TEXT,SELECT,CHECKBOX,DATE,INTEGER|},",
+          "    label: '${4:Field Label}'",
+          "});",
+          "",
+          "context.response.writePage(form);",
+          "$0"
+      ],
+      "description": "Minimal Suitelet form with one field"
+  },
+  "nsSuiteQL": {
+      "prefix": "nsSuiteQL",
+      "body": [
+          "const ${1:results} = query.runSuiteQL({",
+          "    query: `",
+          "        SELECT",
+          "            ${2:id},",
+          "            ${3:name}",
+          "        FROM",
+          "            ${4:customer}",
+          "        WHERE",
+          "            ${5:isinactive} = 'F'",
+          "    `",
+          "}).asMappedResults();",
+          "$0"
+      ],
+      "description": "Run a SuiteQL query with asMappedResults()"
+  },
+  "nsDeployParam": {
+      "prefix": "nsDeployParam",
+      "body": [
+          "// Script Parameter: ${1:custscript_my_param}",
+          "// Type: ${2|Text,Integer,Checkbox,Select,Date|}",
+          "// Description: ${3:Parameter description}",
+          "$0"
+      ],
+      "description": "Script deployment parameter documentation block"
+  },
+  "nsRecordLoad": {
+      "prefix": "nsRecordLoad",
+      "body": [
+          "const ${1:rec} = record.load({",
+          "    type: record.Type.${2|CUSTOMER,SALES_ORDER,INVOICE,VENDOR,ITEM|},",
+          "    id: ${3:recordId},",
+          "    isDynamic: ${4|true,false|}",
+          "});",
+          "$0"
+      ],
+      "description": "Load a record by type and internal ID"
+  },
+  "nsRecordSubmit": {
+      "prefix": "nsRecordSubmit",
+      "body": [
+          "${1:rec}.setValue({ fieldId: '${2:custbody_field}', value: ${3:value} });",
+          "const ${4:savedId} = ${1:rec}.save({ ignoreMandatoryFields: ${5|true,false|} });",
+          "$0"
+      ],
+      "description": "Set a field value and save a record"
+  }
 }

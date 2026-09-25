@@ -1,0 +1,234 @@
+{
+  "clientscript": [
+    {
+      "label": "pageInit",
+      "parameterName": "context",
+      "detail": "ClientScript entry point",
+      "documentation": "Runs when the page is initialized.",
+      "validator": false
+    },
+    {
+      "label": "fieldChanged",
+      "parameterName": "context",
+      "detail": "ClientScript entry point",
+      "documentation": "Runs after a field value changes.",
+      "validator": false
+    },
+    {
+      "label": "postSourcing",
+      "parameterName": "context",
+      "detail": "ClientScript entry point",
+      "documentation": "Runs after a field is sourced.",
+      "validator": false
+    },
+    {
+      "label": "lineInit",
+      "parameterName": "context",
+      "detail": "ClientScript entry point",
+      "documentation": "Runs when a sublist line is initialized.",
+      "validator": false
+    },
+    {
+      "label": "validateField",
+      "parameterName": "context",
+      "detail": "ClientScript entry point",
+      "documentation": "Runs before a field value is accepted.",
+      "validator": true
+    },
+    {
+      "label": "validateInsert",
+      "parameterName": "context",
+      "detail": "ClientScript entry point",
+      "documentation": "Runs before a line is inserted into a sublist.",
+      "validator": true
+    },
+    {
+      "label": "validateLine",
+      "parameterName": "context",
+      "detail": "ClientScript entry point",
+      "documentation": "Runs before a sublist line is committed.",
+      "validator": true
+    },
+    {
+      "label": "validateDelete",
+      "parameterName": "context",
+      "detail": "ClientScript entry point",
+      "documentation": "Runs before a sublist line is removed.",
+      "validator": true
+    },
+    {
+      "label": "saveRecord",
+      "parameterName": "context",
+      "detail": "ClientScript entry point",
+      "documentation": "Runs before the record is saved.",
+      "validator": true
+    },
+    {
+      "label": "sublistChanged",
+      "parameterName": "context",
+      "detail": "ClientScript entry point",
+      "documentation": "Runs after a sublist changes.",
+      "validator": false
+    }
+  ],
+  "usereventscript": [
+    {
+      "label": "beforeLoad",
+      "parameterName": "context",
+      "detail": "UserEvent entry point",
+      "documentation": "Runs before a record is loaded.",
+      "validator": false
+    },
+    {
+      "label": "beforeSubmit",
+      "parameterName": "context",
+      "detail": "UserEvent entry point",
+      "documentation": "Runs before a record is submitted.",
+      "validator": false
+    },
+    {
+      "label": "afterSubmit",
+      "parameterName": "context",
+      "detail": "UserEvent entry point",
+      "documentation": "Runs after a record is submitted.",
+      "validator": false
+    }
+  ],
+  "suitelet": [
+    {
+      "label": "onRequest",
+      "snippet": "function onRequest(context) {\n\tif (context.request.method === 'GET') {\n\t\t$0\n\t\treturn;\n\t}\n\n\tif (context.request.method === 'POST') {\n\t\t\n\t}\n}",
+      "detail": "Suitelet entry point",
+      "documentation": "Handles Suitelet GET and POST requests."
+    }
+  ],
+  "restlet": [
+    {
+      "label": "get",
+      "snippet": "function get(request) {\n\t$0\n}",
+      "detail": "RESTlet entry point",
+      "documentation": "Handles RESTlet GET requests."
+    },
+    {
+      "label": "post",
+      "snippet": "function post(request) {\n\t$0\n}",
+      "detail": "RESTlet entry point",
+      "documentation": "Handles RESTlet POST requests."
+    },
+    {
+      "label": "put",
+      "snippet": "function put(request) {\n\t$0\n}",
+      "detail": "RESTlet entry point",
+      "documentation": "Handles RESTlet PUT requests."
+    },
+    {
+      "label": "_delete",
+      "snippet": "function _delete(request) {\n\t$0\n}",
+      "detail": "RESTlet entry point",
+      "documentation": "Handles RESTlet DELETE requests."
+    }
+  ],
+  "mapreducescript": [
+    {
+      "label": "getInputData",
+      "parameterName": "",
+      "detail": "Map/Reduce entry point",
+      "documentation": "Provides the input data set for the script.",
+      "validator": false
+    },
+    {
+      "label": "map",
+      "parameterName": "context",
+      "detail": "Map/Reduce entry point",
+      "documentation": "Processes each input key/value pair.",
+      "validator": false
+    },
+    {
+      "label": "reduce",
+      "parameterName": "context",
+      "detail": "Map/Reduce entry point",
+      "documentation": "Aggregates values by key.",
+      "validator": false
+    },
+    {
+      "label": "summarize",
+      "parameterName": "summary",
+      "detail": "Map/Reduce entry point",
+      "documentation": "Handles post-processing and execution summary.",
+      "validator": false
+    }
+  ],
+  "scheduledscript": [
+    {
+      "label": "execute",
+      "parameterName": "context",
+      "detail": "Scheduled Script entry point",
+      "documentation": "Runs the scheduled execution.",
+      "validator": false
+    }
+  ],
+  "massupdatescript": [
+    {
+      "label": "each",
+      "parameterName": "params",
+      "detail": "Mass Update entry point",
+      "documentation": "Runs for each record selected in the mass update.",
+      "validator": false
+    }
+  ],
+  "portlet": [
+    {
+      "label": "render",
+      "parameterName": "params",
+      "detail": "Portlet entry point",
+      "documentation": "Renders the portlet content.",
+      "validator": false
+    }
+  ],
+  "workflowactionscript": [
+    {
+      "label": "onAction",
+      "parameterName": "scriptContext",
+      "detail": "Workflow Action entry point",
+      "documentation": "Runs when the workflow action executes.",
+      "validator": false
+    }
+  ],
+  "bundleinstallationscript": [
+    {
+      "label": "beforeInstall",
+      "parameterName": "params",
+      "detail": "Bundle Installation entry point",
+      "documentation": "Runs before the bundle is installed.",
+      "validator": false
+    },
+    {
+      "label": "afterInstall",
+      "parameterName": "params",
+      "detail": "Bundle Installation entry point",
+      "documentation": "Runs after the bundle is installed.",
+      "validator": false
+    },
+    {
+      "label": "beforeUpdate",
+      "parameterName": "params",
+      "detail": "Bundle Installation entry point",
+      "documentation": "Runs before the bundle is updated.",
+      "validator": false
+    },
+    {
+      "label": "afterUpdate",
+      "parameterName": "params",
+      "detail": "Bundle Installation entry point",
+      "documentation": "Runs after the bundle is updated.",
+      "validator": false
+    },
+    {
+      "label": "beforeUninstall",
+      "parameterName": "params",
+      "detail": "Bundle Installation entry point",
+      "documentation": "Runs before the bundle is uninstalled.",
+      "validator": false
+    }
+  ]
+}
