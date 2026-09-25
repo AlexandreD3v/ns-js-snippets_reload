@@ -8,8 +8,8 @@ const { getIntelligenceCommands } = require('./intelligenceCommands');
 
 const OUTPUT_CHANNEL_NAME = 'NetSuite SuiteScript';
 
-function registerCommands(vscode, context, services) {
-    const handlers = {
+function collectCommandHandlers(vscode, services) {
+    return {
         ...getScriptCommands(vscode, services),
         ...getFieldCommands(vscode, services),
         ...getSuiteCloudCommands(vscode, services),
@@ -18,6 +18,10 @@ function registerCommands(vscode, context, services) {
         ...getAiCommands(vscode, services),
         ...getIntelligenceCommands(vscode, services)
     };
+}
+
+function registerCommands(vscode, context, services) {
+    const handlers = collectCommandHandlers(vscode, services);
 
     for (const [commandId, handler] of Object.entries(handlers)) {
         context.subscriptions.push(vscode.commands.registerCommand(commandId, async (...args) => {
@@ -36,5 +40,6 @@ function registerCommands(vscode, context, services) {
 
 module.exports = {
     registerCommands,
+    collectCommandHandlers,
     OUTPUT_CHANNEL_NAME
 };

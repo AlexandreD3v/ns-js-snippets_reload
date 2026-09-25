@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.1
+
+- Fix **command not found** errors by relying on VS Code implicit `onCommand` activation (removed restrictive manual `activationEvents`) and registering all commands before language providers during activation.
+- Harden activation so a provider failure no longer prevents command registration; errors are logged to **NetSuite SuiteScript** output.
+- Remove duplicated **NetSuite:** prefix from command titles in the palette.
+- Add manifest test ensuring every contributed command has a registered handler.
+
 ## 0.8.0
 
 - **0.7.1 hardening:** fixed Developer Assistant command crash, script record URL `{scriptId}` / `{id}` placeholders, safer 2.1 conversion scoped to `return { }` entry points, quieter migration audit, SuiteQL extract limited to `runSuiteQL`, added `.vscodeignore` and GitHub CI.

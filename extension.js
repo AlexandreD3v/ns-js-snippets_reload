@@ -1,6 +1,6 @@
 const path = require('path');
 const { loadData } = require('./src/utils/dataLoader');
-const { createCustomFieldStore, getCustomFieldsConfigPath } = require('./src/utils/customFields');
+const { createCustomFieldStore } = require('./src/utils/customFields');
 const { getWorkspaceFolders } = require('./src/utils/workspace');
 const { discoverFieldIds } = require('./src/sdf/sdfIndex');
 const { createCompletionProvider } = require('./src/providers/completionProvider');
@@ -14,52 +14,63 @@ const { createStatusBar } = require('./src/services/statusBar');
 
 function activate(context) {
     const vscode = require('vscode');
-    const extensionPath = context.extensionPath;
-    const data = loadData(extensionPath);
     const outputChannel = vscode.window.createOutputChannel(OUTPUT_CHANNEL_NAME);
+    context.subscriptions.push(outputChannel);
 
-    const customFieldStore = createCustomFieldStore(vscode, {
-        discoverIds: (folderPath) => {
-            try {
-                const { findProjectRootFromPath } = require('./src/services/suitecloudRunner');
-                const root = findProjectRootFromPath(folderPath, folderPath);
-                return root ? discoverFieldIds(root) : [];
-            } catch {
-                return [];
+    try {
+        const extensionPath = context.extensionPath;
+        const data = loadData(extensionPath);
+
+        const customFieldStore = createCustomFieldStore(vscode, {
+            discoverIds: (folderPath) => {
+                try {
+                    const { findProjectRootFromPath } = require('./src/services/suitecloudRunner');
+                    const root = findProjectRootFromPath(folderPath, folderPath);
+                    return root ? discoverFieldIds(root) : [];
+                } catch {
+                    return [];
+                }
             }
+        });
+
+        const services = {
+            data,
+            extensionPath,
+            context,
+            outputChannel,
+            customFieldStore
+        };
+
+        registerCommands(vscode, context, services);
+
+        try {
+            context.subscriptions.push(
+                createCompletionProvider(vscode, data, customFieldStore),
+                createSuiteQLCompletionProvider(vscode, data),
+                createHoverProvider(vscode, data),
+                ...createDiagnosticProvider(vscode, data),
+                ...registerLanguageModelTools(vscode, context, services)
+            );
+            createStatusBar(vscode, context);
+            watchWorkspaceConfig(vscode, context, customFieldStore);
+            customFieldStore.reload();
+        } catch (error) {
+            outputChannel.appendLine(`NetSuite language features partially unavailable: ${error.stack || error.message}`);
+            outputChannel.show(true);
         }
-    });
 
-    const services = {
-        data,
-        extensionPath,
-        context,
-        outputChannel,
-        customFieldStore
-    };
-
-    context.subscriptions.push(
-        outputChannel,
-        createCompletionProvider(vscode, data, customFieldStore),
-        createSuiteQLCompletionProvider(vscode, data),
-        createHoverProvider(vscode, data),
-        ...createDiagnosticProvider(vscode, data),
-        ...registerLanguageModelTools(vscode, context, services)
-    );
-
-    registerCommands(vscode, context, services);
-    createStatusBar(vscode, context);
-    watchWorkspaceConfig(vscode, context, customFieldStore);
-
-    customFieldStore.reload();
-
-    checkAndPromptForRating(
-        vscode,
-        context,
-        context.extension.packageJSON.version
-    ).catch((error) => {
-        console.error('Unable to evaluate the NetSuite extension rating prompt.', error);
-    });
+        checkAndPromptForRating(
+            vscode,
+            context,
+            context.extension.packageJSON.version
+        ).catch((error) => {
+            console.error('Unable to evaluate the NetSuite extension rating prompt.', error);
+        });
+    } catch (error) {
+        outputChannel.appendLine(`NetSuite extension activation failed: ${error.stack || error.message}`);
+        outputChannel.show(true);
+        throw error;
+    }
 }
 
 function watchWorkspaceConfig(vscode, context, customFieldStore) {
