@@ -2,7 +2,7 @@
 
 ## 0.8.1
 
-- Fix **command not found** errors by relying on VS Code implicit `onCommand` activation (removed restrictive manual `activationEvents`) and registering all commands before language providers during activation.
+- Fix **command not found** errors by registering all commands before language providers during activation and declaring explicit `onCommand` activation events for every contributed command (plus `onStartupFinished`).
 - Harden activation so a provider failure no longer prevents command registration; errors are logged to **NetSuite SuiteScript** output.
 - Remove duplicated **NetSuite:** prefix from command titles in the palette.
 - Add manifest test ensuring every contributed command has a registered handler.
