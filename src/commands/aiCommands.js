@@ -36,7 +36,7 @@ async function copyAiContext(vscode, services) {
     vscode.window.showInformationMessage('NetSuite AI context copied to clipboard.');
 }
 
-function configureDeveloperAssistant(vscode) {
+function configureDeveloperAssistant(vscode, services) {
     const folder = getWorkspaceFolders(vscode)[0];
     if (!folder) {
         vscode.window.showWarningMessage('Open a workspace folder first.');
@@ -51,7 +51,7 @@ function configureDeveloperAssistant(vscode) {
         '4. Configure your AI client (Cline/Cursor/Copilot-compatible) with the local OpenAI-compatible base URL and model ID from SuiteCloud output.',
         '5. Paste the generated API key into the client when prompted. This extension does not store the key.',
         '',
-        'Optional MCP: run "node mcp/server.js" from this extension folder for read-only NetSuite workspace context tools.'
+        'Optional MCP: set NS_MCP_WORKSPACE to your project root, then run "node mcp/server.js" from this extension folder.'
     ].join('\n');
 
     runSuiteCloudInTerminal(vscode, {

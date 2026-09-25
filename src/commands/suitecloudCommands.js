@@ -158,10 +158,18 @@ async function openScriptRecordUrl(vscode) {
     if (!scriptId) {
         return;
     }
-    const url = template.replace('{id}', encodeURIComponent(scriptId));
+    const url = applyScriptRecordUrlTemplate(template, scriptId);
     await vscode.env.openExternal(vscode.Uri.parse(url));
 }
 
+function applyScriptRecordUrlTemplate(template, scriptId) {
+    const encoded = encodeURIComponent(scriptId);
+    return template
+        .replace(/\{scriptId\}/gi, encoded)
+        .replace(/\{id\}/gi, encoded);
+}
+
 module.exports = {
-    getSuiteCloudCommands
+    getSuiteCloudCommands,
+    applyScriptRecordUrlTemplate
 };

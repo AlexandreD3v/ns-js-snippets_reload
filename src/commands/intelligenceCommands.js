@@ -1,6 +1,6 @@
 const path = require('path');
 const { addModuleImport } = require('../analysis/importManager');
-const { buildIndex, findScriptObjectForFile } = require('../sdf/sdfIndex');
+const { buildIndex, findFieldDefinitions, findScriptObjectForFile } = require('../sdf/sdfIndex');
 const { findSuiteCloudProjectRoot } = require('../services/suitecloudRunner');
 const { getSchemaPath, loadSchema } = require('../suiteql/schema');
 
@@ -49,11 +49,9 @@ async function goToFieldDefinition(vscode, services) {
     const root = findSuiteCloudProjectRoot(vscode, editor.document.uri);
     if (root) {
         const index = buildIndex(root);
-        const objectFile = index.scriptObjects.find((item) =>
-            require('fs').readFileSync(item.objectPath, 'utf8').toLowerCase().includes(word)
-        );
-        if (objectFile) {
-            await vscode.window.showTextDocument(await vscode.workspace.openTextDocument(objectFile.objectPath));
+        const definitions = findFieldDefinitions(index, word);
+        if (definitions.length > 0) {
+            await vscode.window.showTextDocument(await vscode.workspace.openTextDocument(definitions[0].objectPath));
             return;
         }
     }

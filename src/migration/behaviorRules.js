@@ -9,10 +9,6 @@ function analyzeBehaviorRisks(text) {
         risks.push('Uses SuiteScript 2.0 "for each (... in ...)" syntax; verify behavior under 2.1.');
     }
 
-    if (/\bconst\s+\w+\s*=/.test(text) && /=/.test(text)) {
-        risks.push('Review const reassignment and temporal dead zone behavior when moving to 2.1.');
-    }
-
     if (/\.toLocaleString\s*\(/.test(text)) {
         risks.push('Date/number toLocaleString formatting may differ between 2.0 and 2.1.');
     }

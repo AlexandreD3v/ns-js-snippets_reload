@@ -1,0 +1,12 @@
+.vscode/**
+.vscode-test/**
+.git/**
+.github/**
+**/.DS_Store
+**/node_modules/**
+**/*.vsix
+**/test/**
+**/*.map
+**/.gitignore
+**/.cursor/**
+**/canvases/**

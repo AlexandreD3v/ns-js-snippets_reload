@@ -36,6 +36,7 @@ function buildIndex(projectRoot) {
         }
     }
 
+    index.fieldIds = Object.keys(index.fieldById).sort();
     cache.set(cacheKey, { statKey, index });
     return index;
 }
@@ -47,6 +48,7 @@ function emptyIndex() {
         scriptObjects: [],
         scriptFiles: [],
         fieldIds: [],
+        fieldById: {},
         scriptIds: [],
         deployPaths: []
     };
@@ -66,6 +68,17 @@ function mtime(targetPath) {
         return fs.statSync(targetPath).mtimeMs;
     } catch {
         return 0;
+    }
+}
+
+function addFieldReference(index, fieldId, reference) {
+    const key = fieldId.toLowerCase();
+    if (!index.fieldById[key]) {
+        index.fieldById[key] = [];
+    }
+    const exists = index.fieldById[key].some((item) => item.objectPath === reference.objectPath);
+    if (!exists) {
+        index.fieldById[key].push(reference);
     }
 }
 
@@ -89,15 +102,18 @@ function ingestObjectXml(index, filePath, info) {
         });
     }
 
+    const reference = { objectPath: filePath, scriptId };
     for (const match of xml.matchAll(/\b(cust(?:body|entity|item|record|column|script|page|form|center|email|tmpl|import|dataset|collection)[a-z0-9_]+)\b/gi)) {
-        index.fieldIds.push(match[1].toLowerCase());
+        addFieldReference(index, match[1], reference);
     }
-
-    index.fieldIds = [...new Set(index.fieldIds)].sort();
 }
 
 function discoverFieldIds(projectRoot) {
     return buildIndex(projectRoot).fieldIds;
+}
+
+function findFieldDefinitions(index, fieldId) {
+    return index.fieldById[fieldId.toLowerCase()] || [];
 }
 
 function findScriptObjectForFile(index, filePath) {
@@ -114,9 +130,19 @@ function parseDeployXml(deployPath) {
     return [...xml.matchAll(/<path>([^<]+)<\/path>/gi)].map((match) => match[1].trim());
 }
 
+function invalidateIndexCache(projectRoot) {
+    if (projectRoot) {
+        cache.delete(projectRoot);
+        return;
+    }
+    cache.clear();
+}
+
 module.exports = {
     buildIndex,
     discoverFieldIds,
+    findFieldDefinitions,
     findScriptObjectForFile,
-    parseDeployXml
+    parseDeployXml,
+    invalidateIndexCache
 };

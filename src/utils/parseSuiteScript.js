@@ -1,3 +1,8 @@
+const {
+    detectImportedModulesFromAst,
+    getExportedEntryPointsFromAst
+} = require('./parseSuiteScriptAst');
+
 const SCRIPT_TYPE_ALIASES = {
     clientscript: 'clientscript',
     usereventscript: 'usereventscript',
@@ -35,13 +40,20 @@ function getApiVersion(documentText) {
 }
 
 function detectImportedModules(documentText) {
-    const defineMatch = documentText.match(/define\s*\(\s*\[([\s\S]*?)\]\s*,\s*function\s*\(([\s\S]*?)\)/);
+    const fromAst = detectImportedModulesFromAst(documentText);
+    if (fromAst !== null) {
+        return fromAst;
+    }
+
+    const defineMatch = documentText.match(/define\s*\(\s*\[([\s\S]*?)\]\s*,\s*(?:function\s*\(|(?:async\s*)?\([^)]*\)\s*=>)/);
     if (!defineMatch) {
         return [];
     }
 
     const modulePaths = [...defineMatch[1].matchAll(/['"](N\/[^'"]+)['"]/g)].map((match) => match[1]);
-    const aliases = defineMatch[2]
+    const aliasMatch = documentText.match(/define\s*\(\s*\[[\s\S]*?\]\s*,\s*(?:function\s*\(([\s\S]*?)\)|(?:async\s*)?\(([\s\S]*?)\)\s*=>)/);
+    const aliasSource = aliasMatch ? (aliasMatch[1] || aliasMatch[2] || '') : '';
+    const aliases = aliasSource
         .split(',')
         .map((alias) => alias.trim())
         .filter(Boolean);
@@ -63,10 +75,19 @@ function getDefinedFunctions(documentText) {
         functions.add(match[1]);
     }
 
+    for (const match of documentText.matchAll(/^\s*([A-Za-z_]\w*)\s*:\s*(?:async\s*)?(?:function|\()/gm)) {
+        functions.add(match[1]);
+    }
+
     return [...functions];
 }
 
 function getExportedEntryPoints(documentText) {
+    const fromAst = getExportedEntryPointsFromAst(documentText);
+    if (fromAst !== null) {
+        return fromAst;
+    }
+
     const exported = new Set();
     const returnMatch = documentText.match(/return\s*\{([\s\S]*?)\n\s*\}\s*;?\s*\}\s*\)\s*;?/);
 

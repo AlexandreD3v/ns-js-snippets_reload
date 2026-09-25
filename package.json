@@ -3,7 +3,7 @@
     "displayName": "Netsuite - JS Snippets Reload",
     "publisher": "alexandrejcorrea",
     "description": "NetSuite SuiteScript 2.x snippets, N/* autocomplete, SuiteQL workbench, 2.1 migration, SDF/SuiteCloud CLI, governance diagnostics, and optional AI context tools.",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "engines": {
         "vscode": "^1.85.0"
     },
@@ -22,7 +22,7 @@
         "Programming Languages"
     ],
     "scripts": {
-        "test": "node test/ratingPrompt.test.js && node test/tier2.test.js && node test/foundation.test.js && node test/migration.test.js && node test/suiteql.test.js"
+        "test": "node test/ratingPrompt.test.js && node test/tier2.test.js && node test/foundation.test.js && node test/migration.test.js && node test/suiteql.test.js && node test/hardening.test.js && node test/parseSuiteScript.test.js && node test/schemaImport.test.js && node test/mcpContext.test.js"
     },
     "contributes": {
         "languages": [
@@ -33,8 +33,7 @@
                     "suiteql"
                 ],
                 "extensions": [
-                    ".suiteql",
-                    ".sql"
+                    ".suiteql"
                 ],
                 "configuration": "./syntaxes/suiteql.language-configuration.json"
             }
@@ -116,6 +115,11 @@
             {
                 "command": "netsuite.createSuiteQLSchema",
                 "title": "NetSuite: Create SuiteQL Schema Config Example",
+                "category": "NetSuite"
+            },
+            {
+                "command": "netsuite.importSuiteQLSchema",
+                "title": "NetSuite: Import SuiteQL Schema (JSON/CSV)",
                 "category": "NetSuite"
             },
             {
@@ -234,6 +238,9 @@
                 },
                 {
                     "command": "netsuite.createSuiteQLSchema"
+                },
+                {
+                    "command": "netsuite.importSuiteQLSchema"
                 },
                 {
                     "command": "netsuite.suitecloudDeploy"

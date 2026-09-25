@@ -140,7 +140,8 @@ Conversion updates `@NApiVersion` to **2.1** and modernizes simple `return { han
 
 ## SuiteQL workbench
 
-- Open or create **`.suiteql`** files (optional `.sql` association) with basic syntax highlighting.
+- Open or create **`.suiteql`** files with basic syntax highlighting.
+- **NetSuite: Import SuiteQL Schema (JSON/CSV)** merges table/column metadata into your workspace schema file.
 - Completion uses bundled table metadata plus optional [schema overrides](resources/netsuite-suiteql-schema.example.json) at **`netsuite.suiteqlSchemaPath`**.
 - **Extract SuiteQL from JavaScript** / **Insert SuiteQL as N/query block** from the editor context menu.
 
@@ -238,7 +239,9 @@ The extension may occasionally show a **non-intrusive** prompt asking you to rat
 
 ## For contributors
 
-Snippets live in `snippets/snippets.code-snippets`. Autocomplete, hover, and diagnostics share JSON under `data/` and providers under `src/`. Optional MCP stub: `mcp/server.js`.
+Snippets live in `snippets/snippets.code-snippets`. Autocomplete, hover, and diagnostics share JSON under `data/` and providers under `src/`.
+
+**MCP (optional):** set `NS_MCP_WORKSPACE` to your project root, then run `node mcp/server.js` for workspace summary, file context, and SDF script object listing.
 
 Package a VSIX locally:
 

@@ -3,13 +3,15 @@ const fs = require('fs');
 const { pickFolder } = require('../utils/workspace');
 const { getSchemaPath } = require('../suiteql/schema');
 const { extractSuiteQLBlocks } = require('../suiteql/suiteqlAnalyzer');
+const { importSchemaFile } = require('../suiteql/schemaImport');
 
 function getSuiteQLCommands(vscode, services) {
     return {
         'netsuite.createSuiteQLQuery': () => createSuiteQLQuery(vscode),
         'netsuite.extractSuiteQLToFile': () => extractSuiteQLToFile(vscode),
         'netsuite.insertSuiteQLAsNQuery': () => insertSuiteQLAsNQuery(vscode),
-        'netsuite.createSuiteQLSchema': () => createSuiteQLSchema(vscode, services)
+        'netsuite.createSuiteQLSchema': () => createSuiteQLSchema(vscode, services),
+        'netsuite.importSuiteQLSchema': () => importSuiteQLSchema(vscode, services)
     };
 }
 
@@ -95,6 +97,39 @@ function insertSuiteQLAsNQuery(vscode) {
         "}).asMappedResults();",
         "$0"
     ].join('\n')));
+}
+
+async function importSuiteQLSchema(vscode, { outputChannel }) {
+    const folder = await pickFolder(vscode, 'Select workspace folder for schema import');
+    if (!folder) {
+        return;
+    }
+
+    const source = await vscode.window.showOpenDialog({
+        canSelectMany: false,
+        filters: {
+            'Schema files': ['json', 'csv']
+        },
+        openLabel: 'Import SuiteQL schema'
+    });
+    if (!source || source.length === 0) {
+        return;
+    }
+
+    const targetPath = getSchemaPath(vscode, vscode.Uri.file(folder.uri.fsPath));
+    if (!targetPath) {
+        vscode.window.showWarningMessage('Could not resolve SuiteQL schema path for this workspace.');
+        return;
+    }
+
+    try {
+        const summary = importSchemaFile(source[0].fsPath, targetPath);
+        outputChannel.appendLine(`Imported SuiteQL schema into ${targetPath} (${summary.tableCount} tables, ${summary.columnCount} columns).`);
+        await vscode.window.showTextDocument(await vscode.workspace.openTextDocument(targetPath));
+        vscode.window.showInformationMessage(`SuiteQL schema imported (${summary.tableCount} tables).`);
+    } catch (error) {
+        vscode.window.showErrorMessage(`SuiteQL schema import failed: ${error.message}`);
+    }
 }
 
 async function createSuiteQLSchema(vscode, { extensionPath }) {

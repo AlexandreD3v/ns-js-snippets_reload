@@ -14,19 +14,29 @@ function convertTo21(text) {
         });
 
         traverse(ast, {
-            Property(path) {
-                const node = path.node;
-                if (!node.value || node.value.type !== 'FunctionExpression' || node.value.generator || node.value.async) {
+            ReturnStatement(path) {
+                const argument = path.node.argument;
+                if (!argument || argument.type !== 'ObjectExpression') {
                     return;
                 }
 
-                path.node.value = {
-                    type: 'ArrowFunctionExpression',
-                    params: node.value.params,
-                    body: node.value.body,
-                    expression: false
-                };
-                audit.info.push('Modernized an exported function property to an arrow function.');
+                for (const property of argument.properties) {
+                    if (property.type !== 'ObjectProperty' && property.type !== 'Property') {
+                        continue;
+                    }
+                    const value = property.value;
+                    if (!value || value.type !== 'FunctionExpression' || value.generator || value.async) {
+                        continue;
+                    }
+
+                    property.value = {
+                        type: 'ArrowFunctionExpression',
+                        params: value.params,
+                        body: value.body,
+                        expression: false
+                    };
+                    audit.info.push('Modernized an exported entry point to an arrow function.');
+                }
             }
         });
 

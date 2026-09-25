@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0
+
+- **0.7.1 hardening:** fixed Developer Assistant command crash, script record URL `{scriptId}` / `{id}` placeholders, safer 2.1 conversion scoped to `return { }` entry points, quieter migration audit, SuiteQL extract limited to `runSuiteQL`, added `.vscodeignore` and GitHub CI.
+- **SuiteQL:** import schema from JSON or CSV into the workspace schema file.
+- **SuiteScript parsing:** AST-backed module import and export detection with regex fallback.
+- **SDF:** indexed custom field definitions for fast go-to-field navigation.
+- **MCP:** workspace-aware stdio server tools (`NS_MCP_WORKSPACE`) for summary, file context, and SDF script objects.
+- Removed default `.sql` language association to avoid conflicts with generic SQL extensions.
+
 ## 0.7.0
 
 - SuiteScript **2.1 audit and conversion** with preview diff before apply (workspace or current file).

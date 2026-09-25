@@ -80,7 +80,7 @@ function analyzeSuiteQLInJavaScript(text) {
 
 function extractSuiteQLBlocks(text) {
     const blocks = [];
-    const regex = /query\s*:\s*`([\s\S]*?)`/g;
+    const regex = /query\.runSuiteQL(?:Paged)?\(\{[\s\S]*?query\s*:\s*`([\s\S]*?)`/g;
     for (const match of text.matchAll(regex)) {
         blocks.push(match[1]);
     }
