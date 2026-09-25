@@ -13,7 +13,9 @@ function loadData(extensionPath) {
         modules: require(path.join(dataDir, 'modules.json')),
         annotations: require(path.join(dataDir, 'annotations.json')),
         entryPoints: require(path.join(dataDir, 'entryPoints.json')),
-        enums: require(path.join(dataDir, 'enums.json'))
+        enums: require(path.join(dataDir, 'enums.json')),
+        governance: require(path.join(dataDir, 'governance.json')),
+        suiteqlTables: require(path.join(dataDir, 'suiteql-tables.json'))
     };
 
     return cachedData;

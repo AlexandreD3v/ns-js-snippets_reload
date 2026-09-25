@@ -4,8 +4,12 @@ const {
     detectDotContext,
     buildEntryPointSnippet
 } = require('../utils/parseSuiteScript');
+const {
+    shouldSuggestFieldId,
+    getFieldSuggestions
+} = require('../utils/customFields');
 
-function createCompletionProvider(vscode, data) {
+function createCompletionProvider(vscode, data, customFieldStore) {
     return vscode.languages.registerCompletionItemProvider(
         { language: 'javascript' },
         {
@@ -31,6 +35,15 @@ function createCompletionProvider(vscode, data) {
                 const dotContext = detectDotContext(linePrefix, importedModules);
                 if (dotContext) {
                     suggestions.push(...createEnumItems(vscode, dotContext, data.enums));
+                }
+
+                if (shouldSuggestFieldId(linePrefix) && customFieldStore) {
+                    suggestions.push(...createCustomFieldItems(
+                        vscode,
+                        linePrefix,
+                        documentText,
+                        customFieldStore.get(document.uri)
+                    ));
                 }
 
                 return suggestions;
@@ -157,6 +170,17 @@ function createEnumItem(vscode, enumValue, alias, enumName, sortPrefix) {
     item.documentation = new vscode.MarkdownString(enumValue.documentation);
     item.sortText = `${sortPrefix}_${enumValue.label}`;
     return item;
+}
+
+function createCustomFieldItems(vscode, linePrefix, documentText, customFieldData) {
+    return getFieldSuggestions(linePrefix, documentText, customFieldData).map((fieldId) => {
+        const item = new vscode.CompletionItem(fieldId, vscode.CompletionItemKind.Field);
+        item.insertText = fieldId;
+        item.detail = 'NetSuite custom field';
+        item.documentation = new vscode.MarkdownString('Custom field ID from netsuite-fields.json or local SDF objects.');
+        item.sortText = `8_${fieldId}`;
+        return item;
+    });
 }
 
 function createMethodItem(vscode, method, alias, sortPrefix) {

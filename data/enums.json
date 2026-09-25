@@ -109,5 +109,13 @@
     "methods": [
       { "label": "create", "snippet": "create({ name: '$1', message: '$2' })", "documentation": "Creates a SuiteScript error object." }
     ]
+  },
+  "N/query": {
+    "methods": [
+      { "label": "runSuiteQL", "snippet": "runSuiteQL({ query: `$1`, params: [$2] })", "documentation": "Runs a SuiteQL query (max 5,000 rows)." },
+      { "label": "runSuiteQLPaged", "snippet": "runSuiteQLPaged({ query: `$1`, params: [$2], pageSize: $3 })", "documentation": "Runs a paged SuiteQL query." },
+      { "label": "create", "snippet": "create({ type: query.Type.$1 })", "documentation": "Creates a query.Query object." },
+      { "label": "load", "snippet": "load({ id: '$1' })", "documentation": "Loads a saved workbook query." }
+    ]
   }
 }

@@ -15,7 +15,10 @@ NetSuite customization in VS Code often means repeating the same boilerplate: JS
 | **Snippets** | Full script templates + small entry-point and API pattern snippets |
 | **Autocomplete** | `N/*` modules, annotations, script entry points, common enums |
 | **Hover** | Short explanations for modules, annotations, entry points, enums |
-| **Diagnostics** | Warnings for missing annotations, wrong entry points, export issues |
+| **Diagnostics** | Warnings for missing annotations, wrong entry points, export issues, SuiteQL safety, governance hints |
+| **SuiteQL** | `.suiteql` files, table/column completion, extract from `N/query` |
+| **2.1 migration** | Workspace audit and previewed conversion to `@NApiVersion 2.1` |
+| **SDF / SuiteCloud** | CLI commands, project detection, related script object navigation |
 
 ---
 
@@ -119,7 +122,68 @@ Optional SuiteScript-oriented checks in `.js` files (on by default):
 - Entry point functions defined but not exported in `return { }`
 - Hint when arrow functions in `return { }` need `@NApiVersion 2.1` instead of `2.0`
 
-Turn off in Settings: **`netsuite.enableDiagnostics`**.
+Turn off in Settings: **`netsuite.enableDiagnostics`**. Governance hints use **`netsuite.enableGovernanceDiagnostics`**.
+
+SuiteQL-related warnings appear inside `query.runSuiteQL` template literals and in `.suiteql` files.
+
+---
+
+## SuiteScript 2.1 migration
+
+- **NetSuite: Audit Workspace for SuiteScript 2.1** — markdown report of API versions and manual-review items.
+- **NetSuite: Convert Current Script to 2.1 (Preview)** — side-by-side diff; apply only when you confirm.
+- **NetSuite: Convert Workspace Scripts to 2.1** — batch conversion with the same preview flow.
+
+Conversion updates `@NApiVersion` to **2.1** and modernizes simple `return { handler: function () {} }` patterns to arrow functions where safe. Behavior-sensitive patterns are flagged for manual review (Oracle has not published a verified “2.1-only” deadline—treat 2.1 as the recommended standard).
+
+---
+
+## SuiteQL workbench
+
+- Open or create **`.suiteql`** files (optional `.sql` association) with basic syntax highlighting.
+- Completion uses bundled table metadata plus optional [schema overrides](resources/netsuite-suiteql-schema.example.json) at **`netsuite.suiteqlSchemaPath`**.
+- **Extract SuiteQL from JavaScript** / **Insert SuiteQL as N/query block** from the editor context menu.
+
+---
+
+## Commands
+
+Open the Command Palette and search **NetSuite** (grouped by area):
+
+| Area | Examples |
+|------|----------|
+| **Scripts** | New template, parameters block, wrap in `define()`, validate file |
+| **Fields** | Reload custom fields, create example config |
+| **2.1** | Audit workspace, convert current file or workspace |
+| **SuiteQL** | New query file, extract/insert, create schema example |
+| **SuiteCloud** | Validate, deploy (optional validate first), upload, create project, account setup, import object/file |
+| **SDF / upload workflow** | Open related script object, copy script for manual upload, open script record URL template |
+| **AI (local-first)** | Copy sanitized context; Developer Assistant setup in terminal (no API keys stored) |
+| **Intelligence** | Add `N/*` import, go to custom field definition, scaffold Jest test |
+
+Right-click in JavaScript for wrap, validate, parameters, 2.1 convert, and SuiteQL extract. Right-click in SuiteQL for insert-as-`N/query`.
+
+SuiteCloud commands require a workspace folder containing `suitecloud.config.js` or `manifest.xml`, and the [SuiteCloud CLI](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_1558708800.html) on your PATH (or set **`netsuite.suitecloudPath`**).
+
+---
+
+## Custom field autocomplete
+
+Copy [`resources/netsuite-fields.example.json`](resources/netsuite-fields.example.json) to **`.vscode/netsuite-fields.json`** in your project and list your account field IDs:
+
+```json
+{
+  "fields": ["custbody_global_field"],
+  "customFields": {
+    "customer": ["custentity_my_flag"],
+    "salesorder": ["custbody_po_number"]
+  }
+}
+```
+
+While typing `fieldId: '...'`, `sublistFieldId: '...'`, or search `name: '...'`, matching IDs are suggested. When the file references `record.Type.CUSTOMER` (or similar), suggestions prefer fields for that record type.
+
+Change the config path with **`netsuite.customFieldsPath`**. With **`netsuite.sdfFieldDiscovery`** enabled (default), field IDs from SDF custom field objects in your SuiteCloud project are merged automatically.
 
 ---
 
@@ -127,9 +191,16 @@ Turn off in Settings: **`netsuite.enableDiagnostics`**.
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `netsuite.defaultApiVersion` | `2.1` | Default API version for future templates |
-| `netsuite.defaultModuleScope` | `SameAccount` | Default module scope for future templates |
+| `netsuite.defaultApiVersion` | `2.1` | Default API version for generated templates |
+| `netsuite.defaultModuleScope` | `SameAccount` | Default module scope for generated templates |
 | `netsuite.enableDiagnostics` | `true` | Show SuiteScript validation in JavaScript files |
+| `netsuite.enableGovernanceDiagnostics` | `true` | Governance usage hints in JavaScript files |
+| `netsuite.customFieldsPath` | `.vscode/netsuite-fields.json` | Custom field ID config for autocomplete |
+| `netsuite.sdfFieldDiscovery` | `true` | Merge field IDs from SDF Objects XML |
+| `netsuite.suiteqlSchemaPath` | `.vscode/netsuite-suiteql-schema.json` | Optional SuiteQL schema overrides |
+| `netsuite.suitecloudPath` | `suitecloud` | SuiteCloud CLI executable for deploy/validate/upload |
+| `netsuite.suitecloudValidateBeforeDeploy` | `true` | Run validate before deploy |
+| `netsuite.scriptRecordUrlTemplate` | *(empty)* | Browser URL template with `{scriptId}` placeholder |
 
 Search **“netsuite”** in VS Code Settings.
 
@@ -153,8 +224,8 @@ The extension may occasionally show a **non-intrusive** prompt asking you to rat
 
 ## Requirements
 
-- Visual Studio Code **1.62+**
-- JavaScript files (SuiteScript 2.x)
+- Visual Studio Code **1.85+** (language model tools are optional and feature-detected)
+- JavaScript files (SuiteScript 2.x) and optional `.suiteql` files
 
 ---
 
@@ -167,7 +238,7 @@ The extension may occasionally show a **non-intrusive** prompt asking you to rat
 
 ## For contributors
 
-Snippets live in `snippets/snippets.code-snippets`. Autocomplete, hover, and diagnostics share JSON under `data/` and providers under `src/`.
+Snippets live in `snippets/snippets.code-snippets`. Autocomplete, hover, and diagnostics share JSON under `data/` and providers under `src/`. Optional MCP stub: `mcp/server.js`.
 
 Package a VSIX locally:
 
