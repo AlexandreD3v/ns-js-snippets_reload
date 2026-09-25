@@ -1,0 +1,14 @@
+{
+  "record.load": 10,
+  "record.create": 10,
+  "record.save": 20,
+  "record.delete": 20,
+  "search.create": 10,
+  "search.run": 10,
+  "query.runSuiteQL": 10,
+  "query.runSuiteQLPaged": 10,
+  "https.get": 10,
+  "https.post": 10,
+  "https.put": 10,
+  "https.delete": 10
+}

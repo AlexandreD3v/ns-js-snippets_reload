@@ -1,0 +1,132 @@
+[
+  {
+    "label": "N/cache",
+    "detail": "SuiteScript module",
+    "documentation": "Store and retrieve data in the NetSuite cache."
+  },
+  {
+    "label": "N/config",
+    "detail": "SuiteScript module",
+    "documentation": "Read NetSuite configuration settings."
+  },
+  {
+    "label": "N/crypto",
+    "detail": "SuiteScript module",
+    "documentation": "Hash, encrypt, and decrypt data."
+  },
+  {
+    "label": "N/currentRecord",
+    "detail": "SuiteScript module",
+    "documentation": "Access the current record in client scripts."
+  },
+  {
+    "label": "N/email",
+    "detail": "SuiteScript module",
+    "documentation": "Send email messages from scripts."
+  },
+  {
+    "label": "N/encode",
+    "detail": "SuiteScript module",
+    "documentation": "Convert strings to and from Base64 and other encodings."
+  },
+  {
+    "label": "N/error",
+    "detail": "SuiteScript module",
+    "documentation": "Create and throw SuiteScript errors."
+  },
+  {
+    "label": "N/file",
+    "detail": "SuiteScript module",
+    "documentation": "Create, load, and manage files in the File Cabinet."
+  },
+  {
+    "label": "N/format",
+    "detail": "SuiteScript module",
+    "documentation": "Format and parse dates, numbers, and currencies."
+  },
+  {
+    "label": "N/http",
+    "detail": "SuiteScript module",
+    "documentation": "Send outbound HTTP requests."
+  },
+  {
+    "label": "N/https",
+    "detail": "SuiteScript module",
+    "documentation": "Send outbound HTTPS requests."
+  },
+  {
+    "label": "N/log",
+    "detail": "SuiteScript module",
+    "documentation": "Write script execution logs."
+  },
+  {
+    "label": "N/query",
+    "detail": "SuiteScript module",
+    "documentation": "Run SuiteQL queries against NetSuite data."
+  },
+  {
+    "label": "N/record",
+    "detail": "SuiteScript module",
+    "documentation": "Create, load, update and delete NetSuite records."
+  },
+  {
+    "label": "N/redirect",
+    "detail": "SuiteScript module",
+    "documentation": "Redirect users to records, tasks or Suitelets."
+  },
+  {
+    "label": "N/render",
+    "detail": "SuiteScript module",
+    "documentation": "Render PDF and email templates."
+  },
+  {
+    "label": "N/runtime",
+    "detail": "SuiteScript module",
+    "documentation": "Read runtime context, script parameters and enabled features."
+  },
+  {
+    "label": "N/search",
+    "detail": "SuiteScript module",
+    "documentation": "Build and run saved searches."
+  },
+  {
+    "label": "N/task",
+    "detail": "SuiteScript module",
+    "documentation": "Create and submit background tasks."
+  },
+  {
+    "label": "N/transaction",
+    "detail": "SuiteScript module",
+    "documentation": "Void and delete transactions in bulk."
+  },
+  {
+    "label": "N/ui/dialog",
+    "detail": "SuiteScript module",
+    "documentation": "Show alert and confirmation dialogs in client scripts."
+  },
+  {
+    "label": "N/ui/message",
+    "detail": "SuiteScript module",
+    "documentation": "Show UI messages in supported contexts."
+  },
+  {
+    "label": "N/ui/serverWidget",
+    "detail": "SuiteScript module",
+    "documentation": "Build Suitelet forms, fields, tabs and sublists."
+  },
+  {
+    "label": "N/url",
+    "detail": "SuiteScript module",
+    "documentation": "Resolve internal and external NetSuite URLs."
+  },
+  {
+    "label": "N/util",
+    "detail": "SuiteScript module",
+    "documentation": "Utility functions for formatting and type conversion."
+  },
+  {
+    "label": "N/xml",
+    "detail": "SuiteScript module",
+    "documentation": "Parse and emit XML documents."
+  }
+]

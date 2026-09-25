@@ -1,0 +1,11 @@
+[
+  { "label": "customer", "documentation": "Customer records." },
+  { "label": "transaction", "documentation": "Transaction header records." },
+  { "label": "transactionline", "documentation": "Transaction line records." },
+  { "label": "item", "documentation": "Item records." },
+  { "label": "employee", "documentation": "Employee records." },
+  { "label": "vendor", "documentation": "Vendor records." },
+  { "label": "account", "documentation": "GL account records." },
+  { "label": "subsidiary", "documentation": "Subsidiary records." },
+  { "label": "customrecord", "documentation": "Custom record type base table (use custom record script id when known)." }
+]

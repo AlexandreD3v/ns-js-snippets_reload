@@ -1,0 +1,19 @@
+{
+  "fields": [
+    "custbody_example_field",
+    "custscript_example_param"
+  ],
+  "customFields": {
+    "customer": [
+      "custentity_customer_flag",
+      "custbody_customer_note"
+    ],
+    "salesorder": [
+      "custbody_po_number",
+      "custbody_ship_instructions"
+    ],
+    "invoice": [
+      "custbody_billing_reference"
+    ]
+  }
+}

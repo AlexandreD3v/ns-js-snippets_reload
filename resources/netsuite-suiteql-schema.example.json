@@ -1,0 +1,16 @@
+{
+  "tables": {
+    "customer": {
+      "label": "customer",
+      "columns": ["id", "entityid", "email", "companyname", "isinactive"]
+    },
+    "transaction": {
+      "label": "transaction",
+      "columns": ["id", "tranid", "type", "entity", "trandate", "status"]
+    }
+  },
+  "columns": {
+    "customer": ["id", "entityid", "email", "companyid", "companyname", "isinactive"],
+    "transaction": ["id", "tranid", "type", "entity", "trandate", "status", "mainline"]
+  }
+}
