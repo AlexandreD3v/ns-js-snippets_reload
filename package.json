@@ -3,7 +3,7 @@
     "displayName": "Netsuite - JS Snippets Reload",
     "publisher": "alexandrejcorrea",
     "description": "This extension contains code snippets for Netsuite Suitescripts developed with JavaScript",
-    "version": "0.0.3",
+    "version": "0.1.0",
     "engines": {
         "vscode": "^1.62.0"
     },
@@ -12,6 +12,10 @@
         "type": "git"
     },
     "icon": "icon.png",
+    "main": "./extension.js",
+    "activationEvents": [
+        "onLanguage:javascript"
+    ],
     "categories": [
         "Snippets"
     ],
@@ -23,7 +27,7 @@
             }
         ]
     },
-    "dependencies": {
+    "devDependencies": {
         "vsce": "^2.2.0"
     }
 }

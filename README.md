@@ -1,80 +1,90 @@
 # ns-js-snippets_reload
-Javascript snippets for Netsuite Suitescript devepeloment
 
-JSSnippets creation by: https://github.com/AlexandreD3v/snippetGenerator/tree/JSSnippets/ScriptTypes
+VS Code extension for NetSuite SuiteScript development with JavaScript snippets and contextual autocomplete.
 
-# Featured snippets:
+Snippet generation started from:
+https://github.com/AlexandreD3v/snippetGenerator/tree/JSSnippets/ScriptTypes
 
-## ClientScript
-- ClientScript: Blank Clientscript with all methods;
-- ClientScriptHelloWorld: Simple hello world in a pageInit function;
-- ClientScriptNSSample: Sample from Netsuite Docs.;
-- pageInit: Called when the page is initialized;
-- validateField: Called when a field is validated;
-- fieldChanged: Called when a field is changed;
-- postSourcing: Called after a field is sourced;
-- lineInit: Called when a new line is added to a sublist;
-- validateLine: Called when a sublist line is validated;
-- sublistChanged: Called when a sublist field is changed;
-- saveRecord: Called when a record is saved;
+## What the extension provides
 
-## UserEvent
-- UserEvent: Blank Userevent with all methods;
-- UserEventHelloWorld: Simple hello world in a beforeLoad function showing a message with N/ui;
-- UserEventNsSample: Sample from Netsuite Docs.;
-- beforeLoad: Called before a record is loaded;
-- beforeSubmit: Called before a record is saved;
-- afterSubmit: Called after a record is saved;
+### Snippets
+- Full script scaffolds for `ClientScript`, `UserEvent`, `Suitelet`, `RESTlet`, `MapReduce`, `ScheduledScript`, `MassUpdateScript`, `Portlet`, `WorkflowActionScript`, and `BundleInstallationScript`
+- Smaller helper snippets for common entry points and utility structures such as `define`
+- Example snippets inspired by NetSuite documentation
 
-## Suitelet
-- Suitelet: blank Suitelet script with onRequest method;
-- SuiteletHelloWorld: simple hello world showing a html; 
-- SuiteletNSSampleForm: sample conde from Netsuite Docs.;
-- onRequest: Called when a Suitelet is accessed via a GET or POST request. The method can return a page object, a file object, or a string.;
+### Autocomplete
+- `N/*` module suggestions while typing inside `define([...])` or a module string
+- SuiteScript annotation suggestions such as `@NApiVersion`, `@NModuleScope`, and `@NScriptType`
+- Contextual entry point suggestions based on the detected `@NScriptType`
+- Entry points are only suggested when they are not already implemented in the current file
 
-## MapReduce
-- MapReduce: Blank MapReduce with all methods;
-- MapReduceNSSample: Map/Reduce sample from Netsuite Docs.;
-- getInputData: Returns an array of input data to be processed;
-- map: Processes each input and returns intermediate results;
-- reduce: Groups intermediate results by key and returns final results;
-- summarize: Generates a summary report based on the results of the Map/Reduce job;
+## Featured snippets
 
-## RESTlet
-- RESTlet: blank Suitelet script with all methods;
-- RESTletHelloWorld: hello world sample of RESTlet;
-- RESTletNsSample: Sample from Netsuite Doc.;
-- get: Called on get request;
-- post: Called on post request;
-- put: Called on put request;
-- _delete: Called on delete request;
+### ClientScript
+- `ClientScript`
+- `ClientScriptHelloWorld`
+- `ClientScriptNSSample`
+- `pageInit`
+- `validateField`
+- `fieldChanged`
+- `postSourcing`
+- `lineInit`
+- `validateLine`
+- `sublistChanged`
+- `saveRecord`
 
-## ScheduledScript
- - scheduledscript;
- - execute method;
+### UserEvent
+- `UserEvent`
+- `UserEventHelloWorld`
+- `UserEventNsSample`
+- `beforeLoad`
+- `beforeSubmit`
+- `afterSubmit`
 
-## MassUpdateScript
- - massupdatescript;
- - massupdatescript (each method);
+### Suitelet
+- `Suitelet`
+- `SuiteletHelloWorld`
+- `SuiteletNSSampleForm`
+- `onRequest`
 
-## Portlet
- - portlet;
- - render method;
+### MapReduce
+- `MapReduce`
+- `MapReduceNSSample`
+- `getInputData`
+- `map`
+- `reduce`
+- `summarize`
 
-## WorkflowActionScript
- - workflowactionscript;
- - onAction method;
+### RESTlet
+- `RESTlet`
+- `RESTletHelloWorld`
+- `RESTletNsSample`
+- `get`
+- `post`
+- `put`
+- `_delete`
 
-## BundleInstallationScript
- - bundleinstallationscript;
+### Other script types
+- `scheduledscript`
+- `massupdatescript`
+- `portlet`
+- `workflowactionscript`
+- `bundleinstallationscript`
 
-## General
- - define
+### General helpers
+- `define`
+- `nRecordSamples`
 
-## N/record
- - nRecordSamples
+## Development notes
 
-# TODO
-- Script samples;
-- N modules;
-- Known netsuite bugs;
+- Snippets are declared in `snippets/snippets.code-snippets`
+- Autocomplete is implemented in `extension.js`
+- Extension metadata lives in `package.json`
+
+## Packaging
+
+Generate a VSIX package with:
+
+```powershell
+node_modules\.bin\vsce.cmd package
+```
