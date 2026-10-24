@@ -1,5 +1,5 @@
 const { buildContext } = require('../ai/contextBuilder');
-const { runSuiteCloudInTerminal } = require('../services/suitecloudRunner');
+const { runInteractiveSuiteCloud } = require('../services/suitecloudRunner');
 const { getWorkspaceFolders } = require('../utils/workspace');
 
 function getAiCommands(vscode, services) {
@@ -36,7 +36,7 @@ async function copyAiContext(vscode, services) {
     vscode.window.showInformationMessage('NetSuite AI context copied to clipboard.');
 }
 
-function configureDeveloperAssistant(vscode) {
+async function configureDeveloperAssistant(vscode, services) {
     const folder = getWorkspaceFolders(vscode)[0];
     if (!folder) {
         vscode.window.showWarningMessage('Open a workspace folder first.');
@@ -54,15 +54,19 @@ function configureDeveloperAssistant(vscode) {
         'Optional MCP: run "node mcp/server.js" from this extension folder for read-only NetSuite workspace context tools.'
     ].join('\n');
 
-    runSuiteCloudInTerminal(vscode, {
-        root: folder.uri.fsPath,
-        args: ['proxy:generatekey'],
-        name: 'SuiteCloud Assistant'
-    });
-
-    vscode.window.showInformationMessage('Developer Assistant setup started in terminal. See NetSuite output for proxy URL.');
     services.outputChannel.appendLine(instructions);
     services.outputChannel.show(true);
+    const terminal = await runInteractiveSuiteCloud(vscode, services.outputChannel, {
+        root: folder.uri.fsPath,
+        args: ['proxy:generatekey'],
+        name: 'SuiteCloud Assistant',
+        title: 'Developer Assistant key generation',
+        notify: false
+    });
+    if (!terminal) {
+        return;
+    }
+    vscode.window.showInformationMessage('Developer Assistant key generation is running in the integrated terminal. Setup steps are in the NetSuite SuiteScript output. This extension does not store the API key.');
 }
 
 module.exports = {

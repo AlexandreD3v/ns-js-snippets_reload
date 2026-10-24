@@ -1,5 +1,12 @@
 const { buildContext } = require('./contextBuilder');
 
+const LM_TOOL_NAMES = [
+    'netsuite_get_script_context',
+    'netsuite_analyze_suitescript',
+    'netsuite_get_suiteql_schema',
+    'netsuite_get_sdf_context'
+];
+
 function registerLanguageModelTools(vscode, context, services) {
     if (!vscode.lm || typeof vscode.lm.registerTool !== 'function') {
         return [];
@@ -7,11 +14,11 @@ function registerLanguageModelTools(vscode, context, services) {
 
     const definitions = [
         {
-            name: 'netsuite_get_script_context',
-            invoke: async () => toolResult(vscode, services, {})
+            name: LM_TOOL_NAMES[0],
+            invoke: async () => toolResult(vscode, services)
         },
         {
-            name: 'netsuite_analyze_suitescript',
+            name: LM_TOOL_NAMES[1],
             invoke: async () => {
                 const payload = await readActiveContext(vscode, services);
                 return JSON.stringify({
@@ -21,14 +28,14 @@ function registerLanguageModelTools(vscode, context, services) {
             }
         },
         {
-            name: 'netsuite_get_suiteql_schema',
+            name: LM_TOOL_NAMES[2],
             invoke: async () => {
                 const payload = await readActiveContext(vscode, services);
                 return JSON.stringify(payload.suiteqlSchema, null, 2);
             }
         },
         {
-            name: 'netsuite_get_sdf_context',
+            name: LM_TOOL_NAMES[3],
             invoke: async () => {
                 const payload = await readActiveContext(vscode, services);
                 return JSON.stringify(payload.sdf, null, 2);
@@ -37,6 +44,7 @@ function registerLanguageModelTools(vscode, context, services) {
     ];
 
     const subscriptions = [];
+    const failures = [];
     for (const tool of definitions) {
         try {
             subscriptions.push(vscode.lm.registerTool(tool.name, {
@@ -49,8 +57,17 @@ function registerLanguageModelTools(vscode, context, services) {
                 }
             }));
         } catch (error) {
-            services.outputChannel.appendLine(`LM tool registration skipped for ${tool.name}: ${error.message}`);
+            failures.push(`${tool.name}: ${error.message}`);
         }
+    }
+
+    if (failures.length > 0) {
+        services.outputChannel.appendLine('Language model tools were not registered.');
+        for (const failure of failures) {
+            services.outputChannel.appendLine(`- ${failure}`);
+        }
+        services.outputChannel.appendLine('Confirm that package.json contributes.languageModelTools matches these names and that VS Code is 1.95 or newer.');
+        services.outputChannel.show(true);
     }
 
     return subscriptions;
@@ -77,5 +94,6 @@ async function toolResult(vscode, services) {
 }
 
 module.exports = {
-    registerLanguageModelTools
+    registerLanguageModelTools,
+    LM_TOOL_NAMES
 };

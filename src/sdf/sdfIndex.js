@@ -48,7 +48,8 @@ function emptyIndex() {
         scriptFiles: [],
         fieldIds: [],
         scriptIds: [],
-        deployPaths: []
+        deployPaths: [],
+        fieldDefinitions: []
     };
 }
 
@@ -69,12 +70,23 @@ function mtime(targetPath) {
     }
 }
 
+function resolveScriptFilePath(projectFolder, fileCabinetPath, scriptFile) {
+    const normalized = String(scriptFile).replace(/\\/g, '/').replace(/^\/+/, '');
+    const segments = normalized.split('/').filter(Boolean);
+    if (/^filecabinet$/i.test(segments[0] || '')) {
+        return path.join(projectFolder, ...segments);
+    }
+    return path.join(fileCabinetPath, ...segments);
+}
+
 function ingestObjectXml(index, filePath, info) {
     const xml = fs.readFileSync(filePath, 'utf8');
     const scriptIdMatch = xml.match(/<scriptid>([^<]+)<\/scriptid>/i);
+    const scriptIdAttribute = xml.match(/\bscriptid\s*=\s*["']([^"']+)["']/i);
     const scriptFileMatch = xml.match(/<scriptfile>\[([^\]]+)\]<\/scriptfile>/i);
     const scriptId = scriptIdMatch ? scriptIdMatch[1].trim() : null;
     const scriptFile = scriptFileMatch ? scriptFileMatch[1].trim() : null;
+    const primaryId = (scriptIdAttribute?.[1] || scriptId || '').trim().toLowerCase();
 
     if (scriptId) {
         index.scriptIds.push(scriptId);
@@ -85,15 +97,44 @@ function ingestObjectXml(index, filePath, info) {
             scriptId,
             scriptFile,
             objectPath: filePath,
-            scriptPath: path.join(info.projectFolder, scriptFile.replace(/\//g, path.sep))
+            scriptPath: resolveScriptFilePath(info.projectFolder, info.fileCabinetPath, scriptFile)
+        });
+    }
+
+    if (/^cust[a-z0-9_]+$/i.test(primaryId)) {
+        index.fieldDefinitions.push({
+            id: primaryId,
+            objectPath: filePath,
+            exact: true
         });
     }
 
     for (const match of xml.matchAll(/\b(cust(?:body|entity|item|record|column|script|page|form|center|email|tmpl|import|dataset|collection)[a-z0-9_]+)\b/gi)) {
-        index.fieldIds.push(match[1].toLowerCase());
+        const id = match[1].toLowerCase();
+        index.fieldIds.push(id);
+        index.fieldDefinitions.push({
+            id,
+            objectPath: filePath,
+            exact: id === primaryId
+        });
     }
 
     index.fieldIds = [...new Set(index.fieldIds)].sort();
+}
+
+function findFieldDefinitionFiles(index, fieldId) {
+    const id = String(fieldId || '').toLowerCase();
+    const matches = (index.fieldDefinitions || []).filter((item) => item.id === id);
+    const exact = matches.filter((item) => item.exact);
+    const chosen = exact.length > 0 ? exact : matches;
+    const seen = new Set();
+    return chosen.filter((item) => {
+        if (seen.has(item.objectPath)) {
+            return false;
+        }
+        seen.add(item.objectPath);
+        return true;
+    });
 }
 
 function discoverFieldIds(projectRoot) {
@@ -118,5 +159,7 @@ module.exports = {
     buildIndex,
     discoverFieldIds,
     findScriptObjectForFile,
+    findFieldDefinitionFiles,
+    resolveScriptFilePath,
     parseDeployXml
 };

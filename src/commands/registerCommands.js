@@ -5,6 +5,7 @@ const { getMigrationCommands } = require('./migrationCommands');
 const { getSuiteQLCommands } = require('./suiteqlCommands');
 const { getAiCommands } = require('./aiCommands');
 const { getIntelligenceCommands } = require('./intelligenceCommands');
+const { getRatingCommands } = require('../services/ratingPrompt');
 
 const OUTPUT_CHANNEL_NAME = 'NetSuite SuiteScript';
 
@@ -16,7 +17,8 @@ function registerCommands(vscode, context, services) {
         ...getMigrationCommands(vscode, services),
         ...getSuiteQLCommands(vscode, services),
         ...getAiCommands(vscode, services),
-        ...getIntelligenceCommands(vscode, services)
+        ...getIntelligenceCommands(vscode, services),
+        ...getRatingCommands(vscode, services)
     };
 
     for (const [commandId, handler] of Object.entries(handlers)) {

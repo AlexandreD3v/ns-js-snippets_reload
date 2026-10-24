@@ -4,6 +4,7 @@
     "publisher": "alexandrejcorrea",
     "description": "NetSuite SuiteScript 2.x snippets, N/* autocomplete, SuiteQL workbench, 2.1 migration, SDF/SuiteCloud CLI, governance diagnostics, and optional AI context tools.",
     "version": "0.7.0",
+    "license": "GPL-3.0-only",
     "engines": {
         "vscode": "^1.85.0"
     },
@@ -22,7 +23,7 @@
         "Programming Languages"
     ],
     "scripts": {
-        "test": "node test/ratingPrompt.test.js && node test/tier2.test.js && node test/foundation.test.js && node test/migration.test.js && node test/suiteql.test.js"
+        "test": "node test/ratingPrompt.test.js && node test/tier2.test.js && node test/foundation.test.js && node test/migration.test.js && node test/suiteql.test.js && node test/toolkit.test.js"
     },
     "contributes": {
         "languages": [
@@ -192,6 +193,11 @@
                 "command": "netsuite.scaffoldJestTest",
                 "title": "NetSuite: Scaffold Jest Test for Script",
                 "category": "NetSuite"
+            },
+            {
+                "command": "netsuite.debugShowRatingPrompt",
+                "title": "NetSuite: Preview Rating Reminder",
+                "category": "NetSuite"
             }
         ],
         "menus": {
@@ -279,6 +285,10 @@
                 },
                 {
                     "command": "netsuite.scaffoldJestTest"
+                },
+                {
+                    "command": "netsuite.debugShowRatingPrompt",
+                    "when": "config.netsuite.debugRatingPrompt"
                 }
             ],
             "editor/context": [
@@ -369,16 +379,82 @@
                 "netsuite.scriptRecordUrlTemplate": {
                     "type": "string",
                     "default": "",
-                    "description": "Optional URL template to open a script record in the browser. Use {scriptId} as placeholder."
+                    "description": "Optional URL template to open a script record in the browser. Use {scriptId} as the placeholder. {id} is also accepted."
+                },
+                "netsuite.debugRatingPrompt": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Show the command NetSuite: Preview Rating Reminder so the Marketplace prompt can be tried without changing the normal reminder schedule or saved answers."
                 }
             }
-        }
+        },
+        "languageModelTools": [
+            {
+                "name": "netsuite_get_script_context",
+                "displayName": "Get NetSuite script context",
+                "toolReferenceName": "netsuiteScriptContext",
+                "modelDescription": "Read sanitized context for the active SuiteScript or SuiteQL editor: annotations, imported N/* modules, diagnostics, migration notes, and SDF metadata. Does not return secrets or credentials.",
+                "userDescription": "Read the active NetSuite file context",
+                "icon": "$(file-code)",
+                "tags": ["netsuite"],
+                "canBeReferencedInPrompt": true,
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {},
+                    "additionalProperties": false
+                }
+            },
+            {
+                "name": "netsuite_analyze_suitescript",
+                "displayName": "Analyze SuiteScript",
+                "toolReferenceName": "netsuiteAnalyzeSuiteScript",
+                "modelDescription": "Return SuiteScript diagnostics and 2.1 migration notes for the active editor. Does not modify the file.",
+                "userDescription": "Analyze the active SuiteScript file",
+                "icon": "$(warning)",
+                "tags": ["netsuite"],
+                "canBeReferencedInPrompt": true,
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {},
+                    "additionalProperties": false
+                }
+            },
+            {
+                "name": "netsuite_get_suiteql_schema",
+                "displayName": "Get SuiteQL schema",
+                "toolReferenceName": "netsuiteSuiteQLSchema",
+                "modelDescription": "Return the local SuiteQL table and column hints available to the extension for the active workspace. This is bundled metadata plus optional workspace overrides, not a live NetSuite account schema.",
+                "userDescription": "Read the local SuiteQL schema hints",
+                "icon": "$(database)",
+                "tags": ["netsuite"],
+                "canBeReferencedInPrompt": true,
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {},
+                    "additionalProperties": false
+                }
+            },
+            {
+                "name": "netsuite_get_sdf_context",
+                "displayName": "Get SDF context",
+                "toolReferenceName": "netsuiteSdfContext",
+                "modelDescription": "Return SuiteCloud project paths and SDF object metadata discovered locally for the active file. Does not call NetSuite or the SuiteCloud CLI.",
+                "userDescription": "Read local SDF project context",
+                "icon": "$(files)",
+                "tags": ["netsuite"],
+                "canBeReferencedInPrompt": true,
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {},
+                    "additionalProperties": false
+                }
+            }
+        ]
     },
     "devDependencies": {
         "vsce": "^2.2.0"
     },
     "dependencies": {
-        "@babel/generator": "^7.29.8",
         "@babel/parser": "^7.29.9",
         "@babel/traverse": "^7.29.8"
     }

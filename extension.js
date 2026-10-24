@@ -58,7 +58,9 @@ function activate(context) {
         context,
         context.extension.packageJSON.version
     ).catch((error) => {
-        console.error('Unable to evaluate the NetSuite extension rating prompt.', error);
+        const detail = error?.stack || error?.message || String(error);
+        outputChannel.appendLine(`[rating-prompt] ${detail}`);
+        outputChannel.show(true);
     });
 }
 
