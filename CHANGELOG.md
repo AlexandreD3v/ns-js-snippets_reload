@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Fix SuiteScript 2.1 preview and workspace conversion so only real SuiteScript edits are saved.
+- Insert SuiteQL into JavaScript, run interactive SuiteCloud commands in the terminal, and correct SDF script paths and script-record URLs.
+- Support arrow-function `define()` callbacks, custom field XML navigation, safer Jest scaffolds, and language model tool registration.
+- Show the Marketplace rating reminder after real use without resetting it on every patch, and add a hidden preview command.
+
 ## 0.7.0
 
 - SuiteScript **2.1 audit and conversion** with preview diff before apply (workspace or current file).

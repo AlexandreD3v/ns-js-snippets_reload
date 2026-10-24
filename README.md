@@ -131,8 +131,8 @@ SuiteQL-related warnings appear inside `query.runSuiteQL` template literals and 
 ## SuiteScript 2.1 migration
 
 - **NetSuite: Audit Workspace for SuiteScript 2.1** — markdown report of API versions and manual-review items.
-- **NetSuite: Convert Current Script to 2.1 (Preview)** — side-by-side diff; apply only when you confirm.
-- **NetSuite: Convert Workspace Scripts to 2.1** — batch conversion with the same preview flow.
+- **NetSuite: Convert Current Script to 2.1 (Preview)** — side-by-side diff of the current file against the converted text. Nothing is written until you choose Apply.
+- **NetSuite: Convert Workspace Scripts to 2.1** — converts SuiteScript modules only (files such as `suitecloud.config.js` are skipped), saves the results, and shows a summary.
 
 Conversion updates `@NApiVersion` to **2.1** and modernizes simple `return { handler: function () {} }` patterns to arrow functions where safe. Behavior-sensitive patterns are flagged for manual review (Oracle has not published a verified “2.1-only” deadline—treat 2.1 as the recommended standard).
 
@@ -142,7 +142,7 @@ Conversion updates `@NApiVersion` to **2.1** and modernizes simple `return { han
 
 - Open or create **`.suiteql`** files (optional `.sql` association) with basic syntax highlighting.
 - Completion uses bundled table metadata plus optional [schema overrides](resources/netsuite-suiteql-schema.example.json) at **`netsuite.suiteqlSchemaPath`**.
-- **Extract SuiteQL from JavaScript** / **Insert SuiteQL as N/query block** from the editor context menu.
+- **Extract SuiteQL from JavaScript** / **Insert SuiteQL as N/query block** from the editor context menu. Insert from a `.suiteql` file writes the JavaScript block into an open JavaScript editor, or into a new JavaScript document. `$`, backticks, and `${...}` in the query are preserved as text.
 
 ---
 
@@ -164,6 +164,8 @@ Open the Command Palette and search **NetSuite** (grouped by area):
 Right-click in JavaScript for wrap, validate, parameters, 2.1 convert, and SuiteQL extract. Right-click in SuiteQL for insert-as-`N/query`.
 
 SuiteCloud commands require a workspace folder containing `suitecloud.config.js` or `manifest.xml`, and the [SuiteCloud CLI](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_1558708800.html) on your PATH (or set **`netsuite.suitecloudPath`**).
+
+**Account setup**, **create project**, and **import file** run in the integrated terminal so you can answer the SuiteCloud prompts. Validate, deploy, and upload stay in the output channel with a cancellable notification.
 
 ---
 
@@ -200,7 +202,8 @@ Change the config path with **`netsuite.customFieldsPath`**. With **`netsuite.sd
 | `netsuite.suiteqlSchemaPath` | `.vscode/netsuite-suiteql-schema.json` | Optional SuiteQL schema overrides |
 | `netsuite.suitecloudPath` | `suitecloud` | SuiteCloud CLI executable for deploy/validate/upload |
 | `netsuite.suitecloudValidateBeforeDeploy` | `true` | Run validate before deploy |
-| `netsuite.scriptRecordUrlTemplate` | *(empty)* | Browser URL template with `{scriptId}` placeholder |
+| `netsuite.scriptRecordUrlTemplate` | *(empty)* | Browser URL template with `{scriptId}` placeholder (`{id}` is also accepted) |
+| `netsuite.debugRatingPrompt` | `false` | Show **NetSuite: Preview Rating Reminder**. The preview does not change the saved reminder choice |
 
 Search **“netsuite”** in VS Code Settings.
 
@@ -218,13 +221,13 @@ Thank you — feedback and reviews are very much appreciated.
 
 ## Privacy (rating reminder)
 
-The extension may occasionally show a **non-intrusive** prompt asking you to rate it after real use (for example, several JavaScript sessions over time, or a couple of sessions after an update). You can **Rate now**, **Later**, or **Don't ask again**. This uses only VS Code **local extension storage** — no telemetry or external tracking.
+The extension may show a reminder after real use (about seven days and several sessions). Choosing **Rate now**, **Later**, or **Don't ask again** — or closing the notification — is saved only after the notification closes. That choice applies to the current major version, so patch and minor updates do not ask again. A later major version can ask after a couple of sessions. To preview the notification without saving that choice, enable **`netsuite.debugRatingPrompt`** and run **NetSuite: Preview Rating Reminder**. This uses only VS Code **local extension storage** — no telemetry or external tracking.
 
 ---
 
 ## Requirements
 
-- Visual Studio Code **1.85+** (language model tools are optional and feature-detected)
+- Visual Studio Code **1.85+**. The four local language model tools are contributed in `package.json` and register when VS Code 1.95+ provides `vscode.lm.registerTool`.
 - JavaScript files (SuiteScript 2.x) and optional `.suiteql` files
 
 ---

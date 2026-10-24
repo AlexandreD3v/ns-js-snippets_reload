@@ -2,10 +2,10 @@ const path = require('path');
 const {
     requireProject,
     runSuiteCloud,
-    runSuiteCloudInTerminal,
+    runInteractiveSuiteCloud,
     findSuiteCloudProjectRoot
 } = require('../services/suitecloudRunner');
-const { buildIndex } = require('../sdf/sdfIndex');
+const { buildIndex, findScriptObjectForFile } = require('../sdf/sdfIndex');
 
 function getSuiteCloudCommands(vscode, services) {
     return {
@@ -64,8 +64,12 @@ async function deployProject(vscode, services) {
 
 async function uploadActiveFile(vscode, services) {
     const editor = vscode.window.activeTextEditor;
+    if (!editor?.document?.uri?.fsPath) {
+        vscode.window.showWarningMessage('Open a file inside the project FileCabinet folder.');
+        return;
+    }
     const project = await requireProject(vscode);
-    if (!project || !editor?.document?.uri?.fsPath) {
+    if (!project) {
         return;
     }
 
@@ -89,15 +93,25 @@ function createProject(vscode, services) {
         vscode.window.showWarningMessage('Open a workspace folder first.');
         return;
     }
-    runSuiteCloudInTerminal(vscode, {
+    return runInteractiveSuiteCloud(vscode, services.outputChannel, {
         root: folder.uri.fsPath,
         args: ['project:create', '-i'],
-        name: 'SuiteCloud Create'
+        name: 'SuiteCloud Create',
+        title: 'Create project'
     });
 }
 
-function accountSetup(vscode, services) {
-    return runProjectCommand(vscode, services, ['account:setup', '-i'], 'Account setup');
+async function accountSetup(vscode, services) {
+    const project = await requireProject(vscode);
+    if (!project) {
+        return;
+    }
+    return runInteractiveSuiteCloud(vscode, services.outputChannel, {
+        root: project.root,
+        args: ['account:setup', '-i'],
+        name: 'SuiteCloud Account Setup',
+        title: 'Account setup'
+    });
 }
 
 async function importObject(vscode, services) {
@@ -116,8 +130,17 @@ async function importObject(vscode, services) {
     });
 }
 
-function importFile(vscode, services) {
-    return runProjectCommand(vscode, services, ['file:import', '-i'], 'Import file');
+async function importFile(vscode, services) {
+    const project = await requireProject(vscode);
+    if (!project) {
+        return;
+    }
+    return runInteractiveSuiteCloud(vscode, services.outputChannel, {
+        root: project.root,
+        args: ['file:import', '-i'],
+        name: 'SuiteCloud Import File',
+        title: 'Import file'
+    });
 }
 
 async function openRelatedObject(vscode) {
@@ -129,39 +152,61 @@ async function openRelatedObject(vscode) {
     }
 
     const index = buildIndex(root);
-    const match = index.scriptObjects.find((item) => path.resolve(item.scriptPath) === path.resolve(editor.document.uri.fsPath));
+    const match = findScriptObjectForFile(index, editor.document.uri.fsPath);
     if (!match) {
-        vscode.window.showWarningMessage('No related SDF object XML found for this script.');
+        vscode.window.showWarningMessage('No related SDF object XML found for this script. The script file path in the object is resolved under FileCabinet.');
         return;
     }
 
     await vscode.window.showTextDocument(await vscode.workspace.openTextDocument(match.objectPath));
+    vscode.window.showInformationMessage(
+        match.scriptId ? `Opened SDF object ${match.scriptId}.` : 'Opened the related SDF object.'
+    );
 }
 
 async function copyScriptForUpload(vscode) {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
+        vscode.window.showWarningMessage('Open a script to copy for manual upload.');
         return;
     }
     await vscode.env.clipboard.writeText(editor.document.getText());
     vscode.window.showInformationMessage('Active script copied to clipboard for Script Editor upload.');
 }
 
+function fillScriptRecordUrl(template, scriptId) {
+    if (!template || !/\{scriptId\}|\{id\}/.test(template)) {
+        return null;
+    }
+    const encoded = encodeURIComponent(scriptId);
+    return template.replace(/\{scriptId\}/g, encoded).replace(/\{id\}/g, encoded);
+}
+
 async function openScriptRecordUrl(vscode) {
     const config = vscode.workspace.getConfiguration('netsuite');
     const template = config.get('scriptRecordUrlTemplate', '');
     if (!template) {
-        vscode.window.showWarningMessage('Set netsuite.scriptRecordUrlTemplate to your account script record URL pattern.');
+        vscode.window.showWarningMessage('Set netsuite.scriptRecordUrlTemplate to your account script record URL pattern. Use {scriptId} as the placeholder.');
         return;
     }
     const scriptId = await vscode.window.showInputBox({ prompt: 'Script internal ID or scriptid parameter value' });
     if (!scriptId) {
         return;
     }
-    const url = template.replace('{id}', encodeURIComponent(scriptId));
-    await vscode.env.openExternal(vscode.Uri.parse(url));
+    const url = fillScriptRecordUrl(template, scriptId);
+    if (!url) {
+        vscode.window.showWarningMessage('netsuite.scriptRecordUrlTemplate must include {scriptId} (or {id}).');
+        return;
+    }
+    const opened = await vscode.env.openExternal(vscode.Uri.parse(url));
+    if (!opened) {
+        vscode.window.showErrorMessage(`Could not open the script record URL: ${url}`);
+        return;
+    }
+    vscode.window.showInformationMessage('Opened the script record URL.');
 }
 
 module.exports = {
-    getSuiteCloudCommands
+    getSuiteCloudCommands,
+    fillScriptRecordUrl
 };

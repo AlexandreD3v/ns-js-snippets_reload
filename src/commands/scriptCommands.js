@@ -86,21 +86,24 @@ async function confirmOverwrite(vscode, targetUri) {
     return answer === 'Overwrite';
 }
 
-function insertScriptParameters(vscode) {
+async function insertScriptParameters(vscode) {
     const editor = getActiveJavaScriptEditor(vscode, 'Open a JavaScript file to insert script parameters.');
     if (!editor) {
         return;
     }
 
-    editor.insertSnippet(new vscode.SnippetString([
+    const inserted = await editor.insertSnippet(new vscode.SnippetString([
         '// Script Parameter: ${1:custscript_my_param}',
         '// Type: ${2|Text,Integer,Checkbox,Select,Date|}',
         '// Description: ${3:Parameter description}',
         '$0'
     ].join('\n')));
+    if (inserted === false) {
+        vscode.window.showErrorMessage('Could not insert the script parameters block.');
+    }
 }
 
-function wrapSelectionInDefine(vscode) {
+async function wrapSelectionInDefine(vscode) {
     const editor = getActiveJavaScriptEditor(vscode, 'Open a JavaScript file to wrap code in define().');
     if (!editor) {
         return;
@@ -128,7 +131,12 @@ function wrapSelectionInDefine(vscode) {
         ''
     ].join('\n');
 
-    editor.edit((editBuilder) => editBuilder.replace(editor.selection, wrapped));
+    const applied = await editor.edit((editBuilder) => editBuilder.replace(editor.selection, wrapped));
+    if (!applied) {
+        vscode.window.showErrorMessage('Could not wrap the selection in define().');
+        return;
+    }
+    vscode.window.showInformationMessage('Wrapped the selection in define().');
 }
 
 function validateCurrentFile(vscode, { data, outputChannel }) {
@@ -152,6 +160,11 @@ function validateCurrentFile(vscode, { data, outputChannel }) {
         );
     }
     outputChannel.show(true);
+    vscode.window.showInformationMessage(
+        diagnostics.length === 0
+            ? 'No SuiteScript issues found.'
+            : `Found ${diagnostics.length} SuiteScript issue(s). Details are in the NetSuite SuiteScript output.`
+    );
 }
 
 function severityLabel(vscode, severity) {

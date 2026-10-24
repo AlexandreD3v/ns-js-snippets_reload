@@ -28,7 +28,7 @@ function createGlobalState(initial = {}) {
 function createVscode(selection = 'Later') {
     const calls = { prompts: 0, opened: [] };
     return {
-        ExtensionMode: { Production: 1, Development: 2 },
+        ExtensionMode: { Production: 1, Development: 2, Test: 3 },
         Uri: { parse: (value) => value },
         window: {
             async showInformationMessage() {
@@ -80,6 +80,26 @@ async function run() {
         'updated version should prompt after two sessions'
     );
     assert.strictEqual(
+        shouldPromptForRating(eligibleState({ promptedVersion: '0', currentVersion: '0.9.1' })),
+        false,
+        'minor and patch updates share the prompted major version'
+    );
+    assert.strictEqual(
+        shouldPromptForRating(eligibleState({ promptedVersion: '0.7.0', currentVersion: '0.7.4' })),
+        true,
+        'a legacy full version saved before an answer does not keep blocking'
+    );
+    assert.strictEqual(
+        shouldPromptForRating(eligibleState({
+            promptedVersion: '0',
+            currentVersion: '1.0.0',
+            isUpdate: true,
+            sessionsSinceVersion: 2
+        })),
+        true,
+        'a new major version can prompt again'
+    );
+    assert.strictEqual(
         shouldPromptForRating(eligibleState({ snoozedUntil: FIRST_INSTALL_DELAY_MS + 1 })),
         false,
         'snooze should suppress prompts'
@@ -89,18 +109,23 @@ async function run() {
 
     const updateState = createGlobalState({
         [STATE_KEYS.installedAt]: 1,
-        [STATE_KEYS.lastSeenVersion]: '0.2.0'
+        [STATE_KEYS.lastSeenVersion]: '0.9.0',
+        [STATE_KEYS.sessionsSinceVersion]: 10,
+        [STATE_KEYS.promptedVersion]: '0'
     });
     const updateVscode = createVscode('Rate now');
     const updateContext = { globalState: updateState, extensionMode: 1 };
 
-    await checkAndPromptForRating(updateVscode, updateContext, '0.3.0', FIRST_INSTALL_DELAY_MS);
-    assert.strictEqual(updateVscode.calls.prompts, 0, 'first updated session should not prompt');
+    await checkAndPromptForRating(updateVscode, updateContext, '1.0.0', FIRST_INSTALL_DELAY_MS);
+    assert.strictEqual(updateVscode.calls.prompts, 0, 'first session of a major update should not prompt');
+    assert.strictEqual(updateState.get(STATE_KEYS.sessionsSinceVersion), 1);
+    assert.strictEqual(updateState.get(STATE_KEYS.promptedVersion), '0');
 
-    await checkAndPromptForRating(updateVscode, updateContext, '0.3.0', FIRST_INSTALL_DELAY_MS);
-    assert.strictEqual(updateVscode.calls.prompts, 1, 'second updated session should prompt');
+    await checkAndPromptForRating(updateVscode, updateContext, '1.0.0', FIRST_INSTALL_DELAY_MS);
+    assert.strictEqual(updateVscode.calls.prompts, 1, 'second session of a major update should prompt');
     assert.deepStrictEqual(updateVscode.calls.opened, [MARKETPLACE_REVIEW_URL]);
     assert.strictEqual(updateState.get(STATE_KEYS.rated), true);
+    assert.strictEqual(updateState.get(STATE_KEYS.promptedVersion), '1');
 
     const laterState = createGlobalState({
         [STATE_KEYS.installedAt]: 1,
@@ -108,6 +133,12 @@ async function run() {
         [STATE_KEYS.sessionsSinceVersion]: 4
     });
     const laterVscode = createVscode('Later');
+    let promptedDuringDialog;
+    laterVscode.window.showInformationMessage = async () => {
+        laterVscode.calls.prompts += 1;
+        promptedDuringDialog = laterState.get(STATE_KEYS.promptedVersion);
+        return 'Later';
+    };
     const eligibleNow = FIRST_INSTALL_DELAY_MS + 1;
     await checkAndPromptForRating(
         laterVscode,
@@ -115,10 +146,20 @@ async function run() {
         '0.3.0',
         eligibleNow
     );
+    assert.strictEqual(promptedDuringDialog, undefined, 'prompted version is recorded only after the dialog resolves');
+    assert.strictEqual(laterState.get(STATE_KEYS.promptedVersion), '0');
     assert.strictEqual(
         laterState.get(STATE_KEYS.snoozedUntil),
         eligibleNow + SNOOZE_DURATION_MS
     );
+
+    await checkAndPromptForRating(
+        laterVscode,
+        { globalState: laterState, extensionMode: 1 },
+        '0.3.4',
+        eligibleNow + SNOOZE_DURATION_MS + 1
+    );
+    assert.strictEqual(laterVscode.calls.prompts, 1, 'a patch bump does not ask again in the same major version');
 
     const neverState = createGlobalState({
         [STATE_KEYS.installedAt]: 1,
@@ -142,7 +183,67 @@ async function run() {
         '0.3.0',
         FIRST_INSTALL_DELAY_MS
     );
-    assert.strictEqual(developmentState.values.size, 0, 'development mode should not write state');
+    assert.ok(developmentState.get(STATE_KEYS.installedAt), 'development mode still tracks real usage');
+    assert.strictEqual(developmentVscode.calls.prompts, 0, 'a fresh development session is not old enough to prompt');
+
+    const testModeState = createGlobalState();
+    const testModeVscode = createVscode();
+    await checkAndPromptForRating(
+        testModeVscode,
+        { globalState: testModeState, extensionMode: 3 },
+        '0.3.0',
+        FIRST_INSTALL_DELAY_MS
+    );
+    assert.strictEqual(testModeState.values.size, 0, 'test mode should not write state');
+
+    const minorState = createGlobalState({
+        [STATE_KEYS.installedAt]: 1,
+        [STATE_KEYS.lastSeenVersion]: '0.7.0',
+        [STATE_KEYS.sessionsSinceVersion]: 3
+    });
+    const minorVscode = createVscode('Later');
+    await checkAndPromptForRating(
+        minorVscode,
+        { globalState: minorState, extensionMode: 1 },
+        '0.7.1',
+        eligibleNow
+    );
+    assert.strictEqual(minorVscode.calls.prompts, 0);
+    assert.strictEqual(minorState.get(STATE_KEYS.sessionsSinceVersion), 4, 'patch bumps keep the session count');
+    assert.strictEqual(minorState.get(STATE_KEYS.updatedVersion), undefined);
+
+    const throwState = createGlobalState({
+        [STATE_KEYS.installedAt]: 1,
+        [STATE_KEYS.lastSeenVersion]: '0.7.0',
+        [STATE_KEYS.sessionsSinceVersion]: 4
+    });
+    const throwVscode = createVscode();
+    throwVscode.window.showInformationMessage = async () => {
+        throw new Error('notification failed');
+    };
+    await assert.rejects(
+        () => checkAndPromptForRating(
+            throwVscode,
+            { globalState: throwState, extensionMode: 1 },
+            '0.7.0',
+            eligibleNow
+        ),
+        /notification failed/
+    );
+    assert.strictEqual(throwState.get(STATE_KEYS.promptedVersion), undefined);
+
+    const previewState = createGlobalState();
+    const previewVscode = createVscode('Rate now');
+    await checkAndPromptForRating(
+        previewVscode,
+        { globalState: previewState, extensionMode: 3 },
+        '0.7.0',
+        0,
+        { force: true, persist: false }
+    );
+    assert.strictEqual(previewVscode.calls.prompts, 1, 'the debug preview ignores eligibility and test mode');
+    assert.strictEqual(previewState.values.size, 0, 'the debug preview does not save an answer');
+    assert.deepStrictEqual(previewVscode.calls.opened, [MARKETPLACE_REVIEW_URL]);
 
     console.log('Rating prompt tests passed.');
 }

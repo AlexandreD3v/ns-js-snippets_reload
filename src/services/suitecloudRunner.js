@@ -147,6 +147,27 @@ function runSuiteCloudInTerminal(vscode, { root, args, name }) {
     return terminal;
 }
 
+async function runInteractiveSuiteCloud(vscode, outputChannel, { root, args, name, title, notify = true }) {
+    const executable = getCliPath(vscode, vscode.Uri.file(root));
+    if (!(await ensureCli(vscode, executable, root))) {
+        return null;
+    }
+
+    const commandLine = buildCommandLine(executable, args);
+    outputChannel.appendLine('');
+    outputChannel.appendLine(`> ${commandLine}`);
+    outputChannel.appendLine(`  (interactive, in ${root})`);
+    const terminal = vscode.window.createTerminal({ name: name || 'SuiteCloud', cwd: root });
+    terminal.show();
+    terminal.sendText(commandLine, true);
+    if (notify) {
+        vscode.window.showInformationMessage(
+            `${title || args[0]} is running in the integrated terminal. Answer the prompts there.`
+        );
+    }
+    return terminal;
+}
+
 module.exports = {
     findSuiteCloudProjectRoot,
     findProjectRootFromPath,
@@ -155,5 +176,6 @@ module.exports = {
     checkCli,
     requireProject,
     runSuiteCloud,
-    runSuiteCloudInTerminal
+    runSuiteCloudInTerminal,
+    runInteractiveSuiteCloud
 };
