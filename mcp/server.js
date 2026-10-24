@@ -1,63 +1,56 @@
 #!/usr/bin/env node
-/**
- * Minimal read-only MCP-style stdio server for NetSuite workspace context.
- * This is intentionally lightweight and does not connect to NetSuite accounts.
- */
-const readline = require('readline');
+const path = require('path');
+const { createToolCatalog, SERVER_NAME } = require('../src/mcp/tools');
+const { createProtocolHandler, extractFrames } = require('../src/mcp/protocol');
 
-const tools = {
-    netsuite_get_script_context: {
-        description: 'Returns guidance on using the VS Code extension context builder.',
-        inputSchema: { type: 'object', properties: {} }
+const extensionPath = process.env.NETSUITE_EXTENSION_PATH || path.join(__dirname, '..');
+const packageInfo = require(path.join(extensionPath, 'package.json'));
+const catalog = createToolCatalog(extensionPath);
+const handle = createProtocolHandler({
+    catalog,
+    serverInfo: {
+        name: SERVER_NAME,
+        version: packageInfo.version || '0.7.0'
     }
-};
+});
 
-function send(message) {
+function accept(payload) {
+    let message;
+    try {
+        message = JSON.parse(payload);
+    } catch {
+        write({ jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } });
+        return;
+    }
+    if (Array.isArray(message)) {
+        write({ jsonrpc: '2.0', id: null, error: { code: -32600, message: 'Invalid Request' } });
+        return;
+    }
+    for (const response of handle(message)) {
+        write(response);
+    }
+}
+
+function write(message) {
     process.stdout.write(`${JSON.stringify(message)}\n`);
 }
 
-const rl = readline.createInterface({ input: process.stdin });
-rl.on('line', (line) => {
-    let request;
-    try {
-        request = JSON.parse(line);
-    } catch {
-        return;
+let buffer = Buffer.alloc(0);
+process.stdin.on('data', (chunk) => {
+    buffer = Buffer.concat([buffer, chunk]);
+    const extracted = extractFrames(buffer);
+    buffer = extracted.rest;
+    for (const payload of extracted.messages) {
+        try {
+            accept(payload);
+        } catch (error) {
+            process.stderr.write(`${error.stack || error.message}\n`);
+        }
     }
-
-    if (request.method === 'initialize') {
-        send({ jsonrpc: '2.0', id: request.id, result: { protocolVersion: '2024-11-05', capabilities: { tools: {} }, serverInfo: { name: 'ns-js-snippets-mcp', version: '0.7.0' } } });
-        return;
-    }
-
-    if (request.method === 'tools/list') {
-        send({
-            jsonrpc: '2.0',
-            id: request.id,
-            result: {
-                tools: Object.entries(tools).map(([name, tool]) => ({
-                    name,
-                    description: tool.description,
-                    inputSchema: tool.inputSchema
-                }))
-            }
-        });
-        return;
-    }
-
-    if (request.method === 'tools/call') {
-        send({
-            jsonrpc: '2.0',
-            id: request.id,
-            result: {
-                content: [{
-                    type: 'text',
-                    text: 'Use the VS Code command "NetSuite: Copy AI Context" or LM tools from the extension for live workspace context.'
-                }]
-            }
-        });
-        return;
-    }
-
-    send({ jsonrpc: '2.0', id: request.id, error: { code: -32601, message: 'Method not found' } });
 });
+
+process.stdin.on('error', (error) => {
+    process.stderr.write(`${error.message}\n`);
+});
+
+process.stderr.write(`NetSuite MCP server listening on stdio (${SERVER_NAME} ${packageInfo.version || '0.7.0'})\n`);

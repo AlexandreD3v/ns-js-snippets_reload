@@ -16,14 +16,15 @@
     "main": "./extension.js",
     "activationEvents": [
         "onLanguage:javascript",
-        "onLanguage:suiteql"
+        "onLanguage:suiteql",
+        "onMcpServerDefinitionProvider:netsuite-suitescript"
     ],
     "categories": [
         "Snippets",
         "Programming Languages"
     ],
     "scripts": {
-        "test": "node test/ratingPrompt.test.js && node test/tier2.test.js && node test/foundation.test.js && node test/migration.test.js && node test/suiteql.test.js && node test/toolkit.test.js"
+        "test": "node test/ratingPrompt.test.js && node test/tier2.test.js && node test/foundation.test.js && node test/migration.test.js && node test/suiteql.test.js && node test/toolkit.test.js && node test/mcp.test.js"
     },
     "contributes": {
         "languages": [
@@ -448,6 +449,12 @@
                     "properties": {},
                     "additionalProperties": false
                 }
+            }
+        ],
+        "mcpServerDefinitionProviders": [
+            {
+                "id": "netsuite-suitescript",
+                "label": "NetSuite SuiteScript"
             }
         ]
     },
