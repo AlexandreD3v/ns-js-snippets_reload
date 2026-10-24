@@ -10,6 +10,7 @@ const { createDiagnosticProvider } = require('./src/providers/diagnosticProvider
 const { checkAndPromptForRating } = require('./src/services/ratingPrompt');
 const { registerCommands, OUTPUT_CHANNEL_NAME } = require('./src/commands/registerCommands');
 const { registerLanguageModelTools } = require('./src/ai/lmTools');
+const { registerMcpServerProvider } = require('./src/mcp/registerProvider');
 const { createStatusBar } = require('./src/services/statusBar');
 
 function activate(context) {
@@ -48,6 +49,10 @@ function activate(context) {
     );
 
     registerCommands(vscode, context, services);
+    const mcpProvider = registerMcpServerProvider(vscode, context, outputChannel);
+    if (mcpProvider) {
+        context.subscriptions.push(mcpProvider);
+    }
     createStatusBar(vscode, context);
     watchWorkspaceConfig(vscode, context, customFieldStore);
 

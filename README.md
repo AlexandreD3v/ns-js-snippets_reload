@@ -158,7 +158,7 @@ Open the Command Palette and search **NetSuite** (grouped by area):
 | **SuiteQL** | New query file, extract/insert, create schema example |
 | **SuiteCloud** | Validate, deploy (optional validate first), upload, create project, account setup, import object/file |
 | **SDF / upload workflow** | Open related script object, copy script for manual upload, open script record URL template |
-| **AI (local-first)** | Copy sanitized context; Developer Assistant setup in terminal (no API keys stored) |
+| **AI (local-first)** | Copy sanitized context; Developer Assistant setup in terminal (no API keys stored); local MCP server |
 | **Intelligence** | Add `N/*` import, go to custom field definition, scaffold Jest test |
 
 Right-click in JavaScript for wrap, validate, parameters, 2.1 convert, and SuiteQL extract. Right-click in SuiteQL for insert-as-`N/query`.
@@ -166,6 +166,49 @@ Right-click in JavaScript for wrap, validate, parameters, 2.1 convert, and Suite
 SuiteCloud commands require a workspace folder containing `suitecloud.config.js` or `manifest.xml`, and the [SuiteCloud CLI](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_1558708800.html) on your PATH (or set **`netsuite.suitecloudPath`**).
 
 **Account setup**, **create project**, and **import file** run in the integrated terminal so you can answer the SuiteCloud prompts. Validate, deploy, and upload stay in the output channel with a cancellable notification.
+
+---
+
+## MCP server
+
+`mcp/server.js` is a local stdio [MCP](https://modelcontextprotocol.io) server. It answers from the same catalogs the extension already ships (modules, snippets, governance, SuiteQL tables) and from SuiteCloud files in the workspace. It does not log in to NetSuite and it does not run the SuiteCloud CLI.
+
+| Tool | What it returns |
+|------|-----------------|
+| `netsuite_lookup_api` | Modules, annotations, entry points, enums, governance costs |
+| `netsuite_search_snippets` | Snippet prefix and a short body preview |
+| `netsuite_get_suiteql_schema` | Bundled tables, plus columns from `.vscode/netsuite-suiteql-schema.json` when present |
+| `netsuite_get_sdf_project` | Project paths, script ids, custom field ids, related object for a script |
+| `netsuite_convert_script` | SuiteScript 2.1 preview and audit. It does not write the file |
+| `netsuite_estimate_governance` | Estimated governance units and loop warnings |
+
+On VS Code **1.101+** the extension contributes `mcpServerDefinitionProviders` (`netsuite-suitescript`) and registers the server with `vscode.lm.registerMcpServerDefinitionProvider` when that API exists. Older VS Code builds ignore the contribution; the stdio server still runs on its own.
+
+### Try it from the terminal
+
+From this repository:
+
+```bash
+printf '%s\n' \
+  '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"0"}}}' \
+  '{"jsonrpc":"2.0","method":"notifications/initialized"}' \
+  '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
+  '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"netsuite_lookup_api","arguments":{"query":"N/record"}}}' \
+  | node mcp/server.js
+```
+
+Stdout is one JSON-RPC message per line. The `tools/call` result should mention `N/record` and must not be the old fixed sentence about copying AI context. Logs go to stderr.
+
+For a SuiteCloud project, pass the folder when calling `netsuite_get_sdf_project` (`workspacePath`) or start the server with `NETSUITE_WORKSPACE` set to that folder.
+
+### Try it in VS Code
+
+1. Press **F5** to launch the Extension Development Host (or install the VSIX).
+2. Open a JavaScript file so the extension activates. On VS Code 1.101+ the MCP provider activation event can also start it.
+3. Run **MCP: List Servers**, start **NetSuite SuiteScript**, and confirm the six tools appear.
+4. In chat, ask for the User Event entry points or a SuiteQL description of `customer`. The client should call `netsuite_lookup_api` or `netsuite_get_suiteql_schema` and show a real result.
+
+Other MCP clients can use the same stdio command: `node` plus the absolute path to `mcp/server.js`.
 
 ---
 
@@ -227,7 +270,7 @@ The extension may show a reminder after real use (about seven days and several s
 
 ## Requirements
 
-- Visual Studio Code **1.85+**. The four local language model tools are contributed in `package.json` and register when VS Code 1.95+ provides `vscode.lm.registerTool`.
+- Visual Studio Code **1.85+**. The four local language model tools are contributed in `package.json` and register when VS Code 1.95+ provides `vscode.lm.registerTool`. Registering this extension's MCP server from the editor needs VS Code **1.101+** (`mcpServerDefinitionProviders`). The stdio server itself runs on the Node version that ships with the editor.
 - JavaScript files (SuiteScript 2.x) and optional `.suiteql` files
 
 ---
@@ -241,7 +284,7 @@ The extension may show a reminder after real use (about seven days and several s
 
 ## For contributors
 
-Snippets live in `snippets/snippets.code-snippets`. Autocomplete, hover, and diagnostics share JSON under `data/` and providers under `src/`. Optional MCP stub: `mcp/server.js`.
+Snippets live in `snippets/snippets.code-snippets`. Autocomplete, hover, and diagnostics share JSON under `data/` and providers under `src/`. The MCP server is `mcp/server.js`, with tool handlers in `src/mcp/`.
 
 Package a VSIX locally:
 

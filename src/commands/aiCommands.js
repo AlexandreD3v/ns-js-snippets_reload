@@ -51,7 +51,7 @@ async function configureDeveloperAssistant(vscode, services) {
         '4. Configure your AI client (Cline/Cursor/Copilot-compatible) with the local OpenAI-compatible base URL and model ID from SuiteCloud output.',
         '5. Paste the generated API key into the client when prompted. This extension does not store the key.',
         '',
-        'Optional MCP: run "node mcp/server.js" from this extension folder for read-only NetSuite workspace context tools.'
+        'MCP: VS Code 1.101+ registers the local NetSuite SuiteScript server. Other clients can run "node mcp/server.js" from this extension folder. Tools are read-only and do not call a NetSuite account.'
     ].join('\n');
 
     services.outputChannel.appendLine(instructions);

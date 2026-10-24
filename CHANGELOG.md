@@ -6,6 +6,7 @@
 - Insert SuiteQL into JavaScript, run interactive SuiteCloud commands in the terminal, and correct SDF script paths and script-record URLs.
 - Support arrow-function `define()` callbacks, custom field XML navigation, safer Jest scaffolds, and language model tool registration.
 - Show the Marketplace rating reminder after real use without resetting it on every patch, and add a hidden preview command.
+- Replace the MCP stub with a stdio server that answers from the extension catalogs, and register it with VS Code when `mcpServerDefinitionProviders` is available.
 
 ## 0.7.0
 
