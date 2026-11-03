@@ -23,7 +23,9 @@
         "Programming Languages"
     ],
     "scripts": {
-        "test": "node test/ratingPrompt.test.js && node test/tier2.test.js && node test/foundation.test.js && node test/migration.test.js && node test/suiteql.test.js && node test/toolkit.test.js"
+        "test": "node test/ratingPrompt.test.js && node test/tier2.test.js && node test/foundation.test.js && node test/migration.test.js && node test/suiteql.test.js && node test/toolkit.test.js",
+        "test:integration": "node scripts/run-integration.js",
+        "test:all": "npm test && npm run test:integration"
     },
     "contributes": {
         "languages": [
@@ -452,6 +454,8 @@
         ]
     },
     "devDependencies": {
+        "@vscode/test-cli": "^0.0.15",
+        "@vscode/test-electron": "^3.1.0",
         "vsce": "^2.2.0"
     },
     "dependencies": {
