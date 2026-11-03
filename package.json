@@ -53,152 +53,164 @@
             {
                 "language": "javascript",
                 "path": "./snippets/snippets.code-snippets"
+            },
+            {
+                "language": "typescript",
+                "path": "./snippets/snippets.code-snippets"
+            },
+            {
+                "language": "javascriptreact",
+                "path": "./snippets/snippets.code-snippets"
+            },
+            {
+                "language": "typescriptreact",
+                "path": "./snippets/snippets.code-snippets"
             }
         ],
         "commands": [
             {
                 "command": "netsuite.newScript",
-                "title": "NetSuite: New Script from Template",
+                "title": "New Script from Template",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.insertScriptParameters",
-                "title": "NetSuite: Insert Script Parameters Block",
+                "title": "Insert Script Parameters Block",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.wrapSelectionInDefine",
-                "title": "NetSuite: Wrap Selection in define()",
+                "title": "Wrap Selection in define()",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.validateFile",
-                "title": "NetSuite: Validate SuiteScript File",
+                "title": "Validate SuiteScript File",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.reloadCustomFields",
-                "title": "NetSuite: Reload Custom Field Suggestions",
+                "title": "Reload Custom Field Suggestions",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.createCustomFieldsConfig",
-                "title": "NetSuite: Create Custom Fields Config Example",
+                "title": "Create Custom Fields Config Example",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.auditWorkspace21",
-                "title": "NetSuite: Audit Workspace for SuiteScript 2.1",
+                "title": "Audit Workspace for SuiteScript 2.1",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.convertCurrentScript21",
-                "title": "NetSuite: Convert Current Script to 2.1 (Preview)",
+                "title": "Convert Current Script to 2.1 (Preview)",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.convertWorkspace21",
-                "title": "NetSuite: Convert Workspace Scripts to 2.1",
+                "title": "Convert Workspace Scripts to 2.1",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.createSuiteQLQuery",
-                "title": "NetSuite: New SuiteQL Query File",
+                "title": "New SuiteQL Query File",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.extractSuiteQLToFile",
-                "title": "NetSuite: Extract SuiteQL from JavaScript",
+                "title": "Extract SuiteQL from JavaScript",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.insertSuiteQLAsNQuery",
-                "title": "NetSuite: Insert SuiteQL as N/query Block",
+                "title": "Insert SuiteQL as N/query Block",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.createSuiteQLSchema",
-                "title": "NetSuite: Create SuiteQL Schema Config Example",
+                "title": "Create SuiteQL Schema Config Example",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudValidate",
-                "title": "NetSuite: SuiteCloud Validate Project",
+                "title": "SuiteCloud Validate Project",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudDeploy",
-                "title": "NetSuite: SuiteCloud Deploy Project",
+                "title": "SuiteCloud Deploy Project",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudUpload",
-                "title": "NetSuite: SuiteCloud Upload File",
+                "title": "SuiteCloud Upload File",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudCreateProject",
-                "title": "NetSuite: SuiteCloud Create Project",
+                "title": "SuiteCloud Create Project",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudAccountSetup",
-                "title": "NetSuite: SuiteCloud Account Setup",
+                "title": "SuiteCloud Account Setup",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudImportObject",
-                "title": "NetSuite: SuiteCloud Import Object",
+                "title": "SuiteCloud Import Object",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudImportFile",
-                "title": "NetSuite: SuiteCloud Import File",
+                "title": "SuiteCloud Import File",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudOpenRelatedObject",
-                "title": "NetSuite: Open Related SDF Script Object",
+                "title": "Open Related SDF Script Object",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.copyScriptForUpload",
-                "title": "NetSuite: Copy Script for Manual Upload",
+                "title": "Copy Script for Manual Upload",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.openScriptRecordUrl",
-                "title": "NetSuite: Open Script Record URL",
+                "title": "Open Script Record URL",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.copyAiContext",
-                "title": "NetSuite: Copy Sanitized AI Context",
+                "title": "Copy Sanitized AI Context",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.configureDeveloperAssistant",
-                "title": "NetSuite: Configure Developer Assistant (Terminal)",
+                "title": "Configure Developer Assistant (Terminal)",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.addModuleImport",
-                "title": "NetSuite: Add N/* Module Import",
+                "title": "Add N/* Module Import",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.goToFieldDefinition",
-                "title": "NetSuite: Go to Custom Field Definition",
+                "title": "Go to Custom Field Definition",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.scaffoldJestTest",
-                "title": "NetSuite: Scaffold Jest Test for Script",
+                "title": "Scaffold Jest Test for Script",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.debugShowRatingPrompt",
-                "title": "NetSuite: Preview Rating Reminder",
+                "title": "Preview Rating Reminder",
                 "category": "NetSuite"
             }
         ],

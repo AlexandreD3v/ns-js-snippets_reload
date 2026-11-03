@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Load the existing SuiteScript snippets in TypeScript, JavaScript React, and TypeScript React files. Snippet prefixes are unchanged.
+- Show each command once in the palette as `NetSuite: <title>`. Titles no longer repeat the NetSuite category.
 - Fix SuiteScript 2.1 preview and workspace conversion so only real SuiteScript edits are saved.
 - Insert SuiteQL into JavaScript, run interactive SuiteCloud commands in the terminal, and correct SDF script paths and script-record URLs.
 - Support arrow-function `define()` callbacks, custom field XML navigation, safer Jest scaffolds, and language model tool registration.

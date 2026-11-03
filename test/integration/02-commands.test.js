@@ -67,6 +67,36 @@ describe('comandos', () => {
         });
     });
 
+    it('não repete NetSuite no título da paleta', async () => {
+        await check('títulos da paleta sem categoria duplicada', async () => {
+            const manifest = vscode.extensions.getExtension(EXTENSION_ID).packageJSON;
+            const palette = new Map(manifest.contributes.menus.commandPalette.map((item) => [item.command, item]));
+            const labels = [];
+            for (const command of manifest.contributes.commands) {
+                assert.strictEqual(command.category, 'NetSuite', command.command);
+                assert.ok(
+                    !command.title.toLowerCase().startsWith('netsuite'),
+                    `${command.command} repete a categoria no título: ${command.title}`
+                );
+                const label = `${command.category}: ${command.title}`;
+                assert.strictEqual(label.indexOf('NetSuite:', 'NetSuite:'.length), -1, label);
+                labels.push(label);
+                const menu = palette.get(command.command);
+                assert.ok(menu, `${command.command} não está na paleta`);
+                if (command.command === 'netsuite.debugShowRatingPrompt') {
+                    assert.strictEqual(menu.when, 'config.netsuite.debugRatingPrompt');
+                    assert.strictEqual(
+                        manifest.contributes.configuration.properties['netsuite.debugRatingPrompt'].default,
+                        false
+                    );
+                } else {
+                    assert.ok(!menu.when, `${command.command} não aparece na busca NetSuite: ${menu.when}`);
+                }
+            }
+            return `${labels.length} rótulos; Preview Rating Reminder fica oculto até netsuite.debugRatingPrompt`;
+        });
+    });
+
     describe('sem configuração', () => {
         for (const spec of noEditorCases) {
             it(`${spec.id} — ${spec.scenario}`, async () => {

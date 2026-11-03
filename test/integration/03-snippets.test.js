@@ -4,7 +4,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const vscode = require('vscode');
-const { EXTENSION_ID, check, record, sleep, workspacePath } = require('./support');
+const { EXTENSION_ID, check, sleep, workspacePath } = require('./support');
 
 const PREFIXES = ['map', 'get', 'post'];
 const SNIPPET_BODIES = {
@@ -40,8 +40,15 @@ function matchesSnippetPrefix(item, prefix) {
     return body.includes(SNIPPET_BODIES[prefix]);
 }
 
+const SNIPPET_LANGUAGES = ['javascript', 'typescript', 'javascriptreact', 'typescriptreact'];
+
 async function openLanguageFile(language, text) {
-    const extension = language === 'typescript' ? '.ts' : '.js';
+    const extension = {
+        javascript: '.js',
+        typescript: '.ts',
+        javascriptreact: '.jsx',
+        typescriptreact: '.tsx'
+    }[language];
     const filePath = path.join(workspacePath(vscode), '.netsuite', `prefixes${extension}`);
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
     fs.writeFileSync(filePath, text);
@@ -108,49 +115,33 @@ describe('snippets e linguagem', () => {
         await editor.update('wordBasedSuggestions', 'off', vscode.ConfigurationTarget.Workspace);
     });
 
-    it('contribui snippets para javascript e mantém os prefixos map, get e post', async () => {
-        await check('snippets javascript (map, get, post)', async () => {
-            const extension = vscode.extensions.getExtension(EXTENSION_ID);
-            const contributions = extension.packageJSON.contributes.snippets;
-            assert.ok(
-                contributions.some((item) => item.language === 'javascript' && item.path === './snippets/snippets.code-snippets'),
-                JSON.stringify(contributions)
-            );
-            const outcome = await completionItems('javascript', PREFIXES.join('\n'));
+    it('contribui o mesmo arquivo de snippets sem mudar o caminho', async () => {
+        await check('contribuição de snippets por linguagem', async () => {
+            const contributions = vscode.extensions.getExtension(EXTENSION_ID).packageJSON.contributes.snippets;
             assert.deepStrictEqual(
-                outcome.missing,
-                [],
-                `prefixos ausentes na completion de javascript: ${outcome.missing.join(', ')}. Amostra: ${sampleItems(outcome.items)}`
+                contributions.map((item) => item.language).sort(),
+                SNIPPET_LANGUAGES.slice().sort()
             );
-            return 'map, get e post aparecem como snippet em javascript';
+            for (const item of contributions) {
+                assert.strictEqual(item.path, './snippets/snippets.code-snippets');
+            }
+            return contributions.map((item) => item.language).join(', ');
         });
     });
 
-    it('prefixos map, get e post aparecem em typescript', async function () {
-        const extension = vscode.extensions.getExtension(EXTENSION_ID);
-        const contributed = (extension.packageJSON.contributes.snippets || [])
-            .map((item) => item.language);
-        let outcome;
-        try {
-            outcome = await completionItems('typescript', PREFIXES.join('\n'));
-        } catch (error) {
-            record('snippets typescript (map, get, post)', 'falhou', error.message);
-            throw error;
-        }
-        if (outcome.missing.length === 0) {
-            record('snippets typescript (map, get, post)', 'passou', 'map, get e post aparecem em typescript');
-            return;
-        }
-        const reason = [
-            `BUG: typescript não recebe os prefixos ${outcome.missing.join(', ')}.`,
-            `contributes.snippets só declara: ${contributed.join(', ') || '(vazio)'}.`,
-            'O arquivo de snippets não muda de prefixo; a contribuição de linguagem é que não inclui typescript.',
-            `Amostra da completion: ${sampleItems(outcome.items) || '(vazia)'}`
-        ].join(' ');
-        record('snippets typescript (map, get, post)', 'falha conhecida', reason);
-        console.log(`\nFALHA CONHECIDA: ${reason}\n`);
-        this.skip();
-    });
+    for (const language of SNIPPET_LANGUAGES) {
+        it(`prefixos map, get e post aparecem em ${language}`, async () => {
+            await check(`snippets ${language} (map, get, post)`, async () => {
+                const outcome = await completionItems(language, PREFIXES.join('\n'));
+                assert.deepStrictEqual(
+                    outcome.missing,
+                    [],
+                    `prefixos ausentes na completion de ${language}: ${outcome.missing.join(', ')}. Amostra: ${sampleItems(outcome.items)}`
+                );
+                return `map, get e post aparecem como snippet em ${language}`;
+            });
+        });
+    }
 
     it('sugere módulos N/* dentro de define()', async () => {
         await check('autocomplete N/* em javascript', async () => {
