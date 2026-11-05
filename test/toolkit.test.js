@@ -153,6 +153,30 @@ function testUrlsJestAndRegistration() {
     }
     assert.ok(pkg.activationEvents.includes('onLanguage:javascript'));
     assert.ok(pkg.activationEvents.includes('onLanguage:suiteql'));
+    const snippetLanguages = pkg.contributes.snippets.map((item) => item.language).sort();
+    assert.deepStrictEqual(snippetLanguages, ['javascript', 'javascriptreact', 'typescript', 'typescriptreact']);
+    for (const item of pkg.contributes.snippets) {
+        assert.strictEqual(item.path, './snippets/snippets.code-snippets');
+    }
+    const paletteByCommand = new Map(pkg.contributes.menus.commandPalette.map((item) => [item.command, item]));
+    for (const command of pkg.contributes.commands) {
+        assert.strictEqual(command.category, 'NetSuite', command.command);
+        assert.ok(
+            !command.title.toLowerCase().startsWith('netsuite'),
+            `${command.command} repete a categoria no título: ${command.title}`
+        );
+        const label = `${command.category}: ${command.title}`;
+        assert.strictEqual(label.indexOf('NetSuite:'), 0, label);
+        assert.strictEqual(label.indexOf('NetSuite:', 'NetSuite:'.length), -1, label);
+        const menu = paletteByCommand.get(command.command);
+        assert.ok(menu, command.command);
+        if (command.command === 'netsuite.debugShowRatingPrompt') {
+            assert.strictEqual(menu.when, 'config.netsuite.debugRatingPrompt');
+        } else {
+            assert.ok(!menu.when, `${command.command} ficou oculto na paleta`);
+        }
+    }
+    assert.strictEqual(pkg.contributes.configuration.properties['netsuite.debugRatingPrompt'].default, false);
     const toolNames = pkg.contributes.languageModelTools.map((tool) => tool.name).sort();
     assert.deepStrictEqual(toolNames, [...LM_TOOL_NAMES].sort());
     for (const tool of pkg.contributes.languageModelTools) {
