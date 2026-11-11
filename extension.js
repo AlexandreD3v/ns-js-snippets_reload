@@ -11,6 +11,7 @@ const { checkAndPromptForRating } = require('./src/services/ratingPrompt');
 const { registerCommands, OUTPUT_CHANNEL_NAME } = require('./src/commands/registerCommands');
 const { registerLanguageModelTools } = require('./src/ai/lmTools');
 const { createStatusBar } = require('./src/services/statusBar');
+const { watchSqlFileAssociation } = require('./src/suiteql/sqlAssociation');
 
 function activate(context) {
     const vscode = require('vscode');
@@ -49,6 +50,7 @@ function activate(context) {
 
     registerCommands(vscode, context, services);
     createStatusBar(vscode, context);
+    watchSqlFileAssociation(vscode, context);
     watchWorkspaceConfig(vscode, context, customFieldStore);
 
     customFieldStore.reload();

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Deploy e Upload passam a mostrar o auth ID do projeto (`defaultAuthId` em `project.json`) e pedem confirmação modal. A confirmação fica explícita quando a conta parece produção. A setting `netsuite.suitecloudAlwaysConfirmAccount` (padrão ligada) exige essa confirmação também para sandbox, release preview e nomes claramente não produtivos.
+- Deploy sem o SuiteCloud CLI avisa que o CLI não foi encontrado e não oferece mais "Validation failed. Deploy anyway?".
+- Upload do arquivo ativo envia `--paths` com a barra inicial do File Cabinet (`/SuiteScripts/...`). Sem editor aberto, o comando continua avisando em vez de seguir.
+- Extrair SuiteQL usa a seleção do editor e também template literals que contêm `SELECT`, não só `query: \`...\``.
+- Arquivos `.sql` deixam de ser SuiteQL por padrão. A associação volta a ser opcional em `netsuite.suiteqlAssociateSqlFiles`. Arquivos `.suiteql` continuam SuiteQL.
+- Fechar o lembrete de avaliação sem escolher uma opção não trava mais a versão maior. A resposta explícita (avaliar, depois ou não perguntar) continua valendo para a versão maior.
 - Load the existing SuiteScript snippets in TypeScript, JavaScript React, and TypeScript React files. Snippet prefixes are unchanged.
 - Show each command once in the palette as `NetSuite: <title>`. Titles no longer repeat the NetSuite category.
 - Fix SuiteScript 2.1 preview and workspace conversion so only real SuiteScript edits are saved.

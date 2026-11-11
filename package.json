@@ -23,7 +23,7 @@
         "Programming Languages"
     ],
     "scripts": {
-        "test": "node test/ratingPrompt.test.js && node test/tier2.test.js && node test/foundation.test.js && node test/migration.test.js && node test/suiteql.test.js && node test/toolkit.test.js",
+        "test": "node test/ratingPrompt.test.js && node test/tier2.test.js && node test/foundation.test.js && node test/migration.test.js && node test/suiteql.test.js && node test/toolkit.test.js && node test/deploySafety.test.js",
         "test:integration": "node scripts/run-integration.js",
         "test:all": "npm test && npm run test:integration"
     },
@@ -36,8 +36,7 @@
                     "suiteql"
                 ],
                 "extensions": [
-                    ".suiteql",
-                    ".sql"
+                    ".suiteql"
                 ],
                 "configuration": "./syntaxes/suiteql.language-configuration.json"
             }
@@ -389,6 +388,16 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Run project:validate before project:deploy when using NetSuite: SuiteCloud Deploy Project."
+                },
+                "netsuite.suitecloudAlwaysConfirmAccount": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Always ask which SuiteCloud account (project.json defaultAuthId) will be used before Deploy and Upload. Accounts that look like production still ask when this is off."
+                },
+                "netsuite.suiteqlAssociateSqlFiles": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Treat .sql files as SuiteQL. Off by default so ordinary SQL files keep their own language. .suiteql files are always SuiteQL."
                 },
                 "netsuite.scriptRecordUrlTemplate": {
                     "type": "string",

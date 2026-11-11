@@ -56,9 +56,15 @@ async function extractSuiteQLToFile(vscode) {
         return;
     }
 
-    const blocks = extractSuiteQLBlocks(editor.document.getText());
+    const selection = editor.selection && !editor.selection.isEmpty
+        ? editor.document.getText(editor.selection)
+        : '';
+    const blocks = extractSuiteQLBlocks(editor.document.getText(), {
+        selection,
+        offset: editor.document.offsetAt(editor.selection.active)
+    });
     if (blocks.length === 0) {
-        vscode.window.showWarningMessage('No embedded SuiteQL template literal found.');
+        vscode.window.showWarningMessage('No SuiteQL query found. Select a query, or include SELECT in a template literal.');
         return;
     }
 

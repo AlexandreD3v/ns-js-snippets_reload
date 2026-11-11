@@ -318,9 +318,49 @@ const followUpCases = [
     {
         id: 'netsuite.extractSuiteQLToFile',
         scenario: 'JavaScript sem template SuiteQL',
-        feedback: /No embedded SuiteQL template literal found/,
+        feedback: /No SuiteQL query found/,
         async setup(_harness, vscode) {
             await openDocument(vscode, { language: 'javascript', content: SAMPLE_SCRIPT });
+        }
+    },
+    {
+        id: 'netsuite.extractSuiteQLToFile',
+        scenario: 'template literal com SELECT, sem query:',
+        feedback: /Extracted SuiteQL to from-template\.suiteql/,
+        async setup(harness, vscode) {
+            harness.setInput('from-template.suiteql');
+            await openDocument(vscode, {
+                language: 'javascript',
+                content: [
+                    'define([], () => {',
+                    '    const query = `SELECT id FROM vendor`;',
+                    '    return query;',
+                    '});',
+                    ''
+                ].join('\n')
+            });
+        },
+        async assert(vscode) {
+            const filePath = path.join(workspacePath(vscode), 'from-template.suiteql');
+            assert.ok(fs.existsSync(filePath), filePath);
+            assert.strictEqual(fs.readFileSync(filePath, 'utf8').trim(), 'SELECT id FROM vendor');
+        }
+    },
+    {
+        id: 'netsuite.extractSuiteQLToFile',
+        scenario: 'usa a seleção do editor',
+        feedback: /Extracted SuiteQL to from-selection\.suiteql/,
+        async setup(harness, vscode) {
+            harness.setInput('from-selection.suiteql');
+            const content = 'const ignored = `SELECT id FROM customer`;\nconst picked = "SELECT id FROM employee";\n';
+            const { document, editor } = await openDocument(vscode, { language: 'javascript', content });
+            const start = document.positionAt(content.indexOf('SELECT id FROM employee'));
+            const end = document.positionAt(content.indexOf('SELECT id FROM employee') + 'SELECT id FROM employee'.length);
+            editor.selection = new vscode.Selection(start, end);
+        },
+        async assert(vscode) {
+            const filePath = path.join(workspacePath(vscode), 'from-selection.suiteql');
+            assert.strictEqual(fs.readFileSync(filePath, 'utf8').trim(), 'SELECT id FROM employee');
         }
     },
     {

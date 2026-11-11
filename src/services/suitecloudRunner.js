@@ -104,7 +104,7 @@ async function ensureCli(vscode, executable, cwd) {
 async function runSuiteCloud(vscode, outputChannel, { root, args, title }) {
     const executable = getCliPath(vscode, vscode.Uri.file(root));
     if (!(await ensureCli(vscode, executable, root))) {
-        return { exitCode: -1, output: '', cancelled: false };
+        return { exitCode: -1, output: '', cancelled: false, cliMissing: true };
     }
 
     outputChannel.show(true);
@@ -174,6 +174,7 @@ module.exports = {
     getProjectInfo,
     getCliPath,
     checkCli,
+    ensureCli,
     requireProject,
     runSuiteCloud,
     runSuiteCloudInTerminal,

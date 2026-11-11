@@ -232,6 +232,48 @@ async function run() {
     );
     assert.strictEqual(throwState.get(STATE_KEYS.promptedVersion), undefined);
 
+    const dismissState = createGlobalState({
+        [STATE_KEYS.installedAt]: 1,
+        [STATE_KEYS.lastSeenVersion]: '0.7.0',
+        [STATE_KEYS.sessionsSinceVersion]: 4
+    });
+    const dismissVscode = createVscode();
+    dismissVscode.window.showInformationMessage = async () => {
+        dismissVscode.calls.prompts += 1;
+        return undefined;
+    };
+    await checkAndPromptForRating(
+        dismissVscode,
+        { globalState: dismissState, extensionMode: 1 },
+        '0.7.0',
+        eligibleNow
+    );
+    assert.strictEqual(
+        dismissState.get(STATE_KEYS.promptedVersion),
+        undefined,
+        'ignoring the notification does not lock the version'
+    );
+    assert.strictEqual(dismissState.get(STATE_KEYS.snoozedUntil), eligibleNow + SNOOZE_DURATION_MS);
+    assert.strictEqual(dismissState.get(STATE_KEYS.rated), undefined);
+    assert.strictEqual(dismissState.get(STATE_KEYS.neverAsk), undefined);
+
+    await checkAndPromptForRating(
+        dismissVscode,
+        { globalState: dismissState, extensionMode: 1 },
+        '0.7.0',
+        eligibleNow + 1
+    );
+    assert.strictEqual(dismissVscode.calls.prompts, 1, 'a snooze still applies after the notification is closed');
+
+    await checkAndPromptForRating(
+        dismissVscode,
+        { globalState: dismissState, extensionMode: 1 },
+        '0.7.4',
+        eligibleNow + SNOOZE_DURATION_MS + 1
+    );
+    assert.strictEqual(dismissVscode.calls.prompts, 2, 'the same major version can ask again after the snooze');
+    assert.strictEqual(dismissState.get(STATE_KEYS.promptedVersion), undefined);
+
     const previewState = createGlobalState();
     const previewVscode = createVscode('Rate now');
     await checkAndPromptForRating(

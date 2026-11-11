@@ -140,9 +140,9 @@ Conversion updates `@NApiVersion` to **2.1** and modernizes simple `return { han
 
 ## SuiteQL workbench
 
-- Open or create **`.suiteql`** files (optional `.sql` association) with basic syntax highlighting.
+- Open or create **`.suiteql`** files with basic syntax highlighting. **`.sql` files stay SQL** unless **`netsuite.suiteqlAssociateSqlFiles`** is enabled.
 - Completion uses bundled table metadata plus optional [schema overrides](resources/netsuite-suiteql-schema.example.json) at **`netsuite.suiteqlSchemaPath`**.
-- **Extract SuiteQL from JavaScript** / **Insert SuiteQL as N/query block** from the editor context menu. Insert from a `.suiteql` file writes the JavaScript block into an open JavaScript editor, or into a new JavaScript document. `$`, backticks, and `${...}` in the query are preserved as text.
+- **Extract SuiteQL from JavaScript** uses the current selection when there is one. Otherwise it takes a template literal that contains `SELECT`, including literals that are not written as `query: \`...\``. **Insert SuiteQL as N/query block** from the editor context menu writes the JavaScript block into an open JavaScript editor, or into a new JavaScript document. `$`, backticks, and `${...}` in the query are preserved as text.
 
 ---
 
@@ -164,6 +164,8 @@ Open the Command Palette and search **NetSuite** (grouped by area):
 Right-click in JavaScript for wrap, validate, parameters, 2.1 convert, and SuiteQL extract. Right-click in SuiteQL for insert-as-`N/query`.
 
 SuiteCloud commands require a workspace folder containing `suitecloud.config.js` or `manifest.xml`, and the [SuiteCloud CLI](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_1558708800.html) on your PATH (or set **`netsuite.suitecloudPath`**).
+
+**Deploy** and **Upload** read `defaultAuthId` from the project's `project.json` and ask you to confirm that account in a modal dialog. The dialog is explicit when the auth ID looks like production. Sandbox account IDs use an `_SB` / `_SB1` suffix (URL form `-sb1`); release preview uses `_RP`. Turn **`netsuite.suitecloudAlwaysConfirmAccount`** off to skip the dialog for accounts that are clearly sandbox, release preview, or non-production. Production-looking accounts, and projects with no readable auth ID, still ask. If the SuiteCloud CLI is missing, Deploy stops with that error instead of offering to deploy after a failed validation. Upload sends File Cabinet paths with a leading `/`, for example `/SuiteScripts/hello.js`.
 
 **Account setup**, **create project**, and **import file** run in the integrated terminal so you can answer the SuiteCloud prompts. Validate, deploy, and upload stay in the output channel with a cancellable notification.
 
@@ -202,6 +204,8 @@ Change the config path with **`netsuite.customFieldsPath`**. With **`netsuite.sd
 | `netsuite.suiteqlSchemaPath` | `.vscode/netsuite-suiteql-schema.json` | Optional SuiteQL schema overrides |
 | `netsuite.suitecloudPath` | `suitecloud` | SuiteCloud CLI executable for deploy/validate/upload |
 | `netsuite.suitecloudValidateBeforeDeploy` | `true` | Run validate before deploy |
+| `netsuite.suitecloudAlwaysConfirmAccount` | `true` | Confirm the project auth ID before Deploy and Upload. Production-looking accounts still confirm when this is off |
+| `netsuite.suiteqlAssociateSqlFiles` | `false` | Treat `.sql` files as SuiteQL. `.suiteql` files are always SuiteQL |
 | `netsuite.scriptRecordUrlTemplate` | *(empty)* | Browser URL template with `{scriptId}` placeholder (`{id}` is also accepted) |
 | `netsuite.debugRatingPrompt` | `false` | Show **NetSuite: Preview Rating Reminder**. The preview does not change the saved reminder choice |
 
@@ -221,7 +225,7 @@ Thank you — feedback and reviews are very much appreciated.
 
 ## Privacy (rating reminder)
 
-The extension may show a reminder after real use (about seven days and several sessions). Choosing **Rate now**, **Later**, or **Don't ask again** — or closing the notification — is saved only after the notification closes. That choice applies to the current major version, so patch and minor updates do not ask again. A later major version can ask after a couple of sessions. To preview the notification without saving that choice, enable **`netsuite.debugRatingPrompt`** and run **NetSuite: Preview Rating Reminder**. This uses only VS Code **local extension storage** — no telemetry or external tracking.
+The extension may show a reminder after real use (about seven days and several sessions). Choosing **Rate now**, **Later**, or **Don't ask again** is saved only after the notification closes. That choice applies to the current major version, so patch and minor updates do not ask again. Closing the notification without choosing is not treated as an answer: the version is not locked, and the reminder can return after a snooze. A later major version can ask after a couple of sessions. To preview the notification without saving that choice, enable **`netsuite.debugRatingPrompt`** and run **NetSuite: Preview Rating Reminder**. This uses only VS Code **local extension storage** — no telemetry or external tracking.
 
 ---
 
