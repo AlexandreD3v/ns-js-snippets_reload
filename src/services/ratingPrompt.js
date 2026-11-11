@@ -80,7 +80,10 @@ async function checkAndPromptForRating(vscode, context, currentVersion, now = Da
     }
 
     const promptedAt = eligibility?.now ?? now;
-    await state.update(STATE_KEYS.promptedVersion, majorOf(currentVersion));
+    const answered = selection === 'Rate now' || selection === 'Later' || selection === "Don't ask again";
+    if (answered) {
+        await state.update(STATE_KEYS.promptedVersion, majorOf(currentVersion));
+    }
 
     if (selection === 'Rate now') {
         await state.update(STATE_KEYS.rated, true);
@@ -93,6 +96,14 @@ async function checkAndPromptForRating(vscode, context, currentVersion, now = Da
         return true;
     }
 
+    if (selection === 'Later') {
+        await state.update(STATE_KEYS.snoozedUntil, promptedAt + SNOOZE_DURATION_MS);
+        return true;
+    }
+
+    // Closing the notification is not an answer. Do not record promptedVersion,
+    // or this major version would stay silent. Snooze only, so the same version
+    // can ask again after the snooze.
     await state.update(STATE_KEYS.snoozedUntil, promptedAt + SNOOZE_DURATION_MS);
     return true;
 }

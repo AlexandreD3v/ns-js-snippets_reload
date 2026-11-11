@@ -32,7 +32,8 @@ module.exports = defineConfig({
         'test/integration/02-commands.test.js',
         'test/integration/03-snippets.test.js',
         'test/integration/04-lm-tools.test.js',
-        'test/integration/05-suitecloud-mock.test.js'
+        'test/integration/05-suitecloud-mock.test.js',
+        'test/integration/06-suiteql-files.test.js'
     ],
     version: 'stable',
     extensionDevelopmentPath: __dirname,

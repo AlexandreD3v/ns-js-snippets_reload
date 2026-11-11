@@ -3,8 +3,16 @@ const {
     requireProject,
     runSuiteCloud,
     runInteractiveSuiteCloud,
-    findSuiteCloudProjectRoot
+    findSuiteCloudProjectRoot,
+    ensureCli,
+    getCliPath
 } = require('../services/suitecloudRunner');
+const {
+    readProjectAuth,
+    buildAccountPrompt,
+    fileCabinetArgument,
+    interpretValidationResult
+} = require('../services/projectAccount');
 const { buildIndex, findScriptObjectForFile } = require('../sdf/sdfIndex');
 
 function getSuiteCloudCommands(vscode, services) {
@@ -30,9 +38,38 @@ async function runProjectCommand(vscode, { outputChannel }, args, title) {
     return runSuiteCloud(vscode, outputChannel, { root: project.root, args, title });
 }
 
+async function confirmProjectAccount(vscode, project, action) {
+    const executable = getCliPath(vscode, vscode.Uri.file(project.root));
+    if (!(await ensureCli(vscode, executable, project.root))) {
+        return false;
+    }
+
+    const alwaysConfirm = vscode.workspace.getConfiguration('netsuite', vscode.Uri.file(project.root))
+        .get('suitecloudAlwaysConfirmAccount', true);
+    const prompt = buildAccountPrompt({
+        action,
+        auth: readProjectAuth(project.root),
+        alwaysConfirm
+    });
+    if (!prompt) {
+        return true;
+    }
+
+    const proceed = await vscode.window.showWarningMessage(
+        prompt.message,
+        { modal: true, detail: prompt.detail },
+        prompt.confirmLabel,
+        'Cancel'
+    );
+    return proceed === prompt.confirmLabel;
+}
+
 async function deployProject(vscode, services) {
     const project = await requireProject(vscode);
     if (!project) {
+        return;
+    }
+    if (!(await confirmProjectAccount(vscode, project, 'deploy'))) {
         return;
     }
 
@@ -43,13 +80,18 @@ async function deployProject(vscode, services) {
             args: ['project:validate'],
             title: 'Validate before deploy'
         });
-        if (validateResult.exitCode !== 0) {
+        const outcome = interpretValidationResult(validateResult);
+        if (outcome === 'stop') {
+            return;
+        }
+        if (outcome === 'ask') {
             const proceed = await vscode.window.showWarningMessage(
                 'Validation failed. Deploy anyway?',
-                'Deploy',
+                { modal: true },
+                'Deploy anyway',
                 'Cancel'
             );
-            if (proceed !== 'Deploy') {
+            if (proceed !== 'Deploy anyway') {
                 return;
             }
         }
@@ -73,13 +115,19 @@ async function uploadActiveFile(vscode, services) {
         return;
     }
 
-    const relative = path.relative(project.fileCabinetPath, editor.document.uri.fsPath).replace(/\\/g, '/');
-    if (relative.startsWith('..')) {
+    const relative = path.relative(project.fileCabinetPath, editor.document.uri.fsPath);
+    const cabinetPath = relative.startsWith('..') || path.isAbsolute(relative)
+        ? null
+        : fileCabinetArgument(relative);
+    if (!cabinetPath) {
         vscode.window.showWarningMessage('Active file is not inside the project FileCabinet folder.');
         return;
     }
+    if (!(await confirmProjectAccount(vscode, project, 'upload'))) {
+        return;
+    }
 
-    const args = ['file:upload', '--paths', relative];
+    const args = ['file:upload', '--paths', cabinetPath];
     return runSuiteCloud(vscode, services.outputChannel, {
         root: project.root,
         args,
@@ -208,5 +256,6 @@ async function openScriptRecordUrl(vscode) {
 
 module.exports = {
     getSuiteCloudCommands,
-    fillScriptRecordUrl
+    fillScriptRecordUrl,
+    confirmProjectAccount
 };

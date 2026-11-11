@@ -78,13 +78,68 @@ function analyzeSuiteQLInJavaScript(text) {
     return findings;
 }
 
-function extractSuiteQLBlocks(text) {
-    const blocks = [];
-    const regex = /query\s*:\s*`([\s\S]*?)`/g;
-    for (const match of text.matchAll(regex)) {
-        blocks.push(match[1]);
+function normalizeSuiteQLSelection(selection) {
+    if (typeof selection !== 'string') {
+        return '';
     }
-    return blocks;
+    let value = selection.trim();
+    if (value.length >= 2 && value.startsWith('`') && value.endsWith('`')) {
+        value = value.slice(1, -1).trim();
+    }
+    return value;
+}
+
+function chooseSuiteQLBlock(blocks, offset) {
+    if (!blocks.length) {
+        return null;
+    }
+    if (typeof offset === 'number') {
+        const hit = blocks.find((block) => offset >= block.start && offset <= block.end);
+        if (hit) {
+            return hit.text;
+        }
+    }
+    return blocks[0].text;
+}
+
+function extractSuiteQLBlocks(text, options = {}) {
+    const selection = normalizeSuiteQLSelection(options.selection);
+    if (selection) {
+        return [selection];
+    }
+
+    const source = String(text || '');
+    const withSelect = [];
+    const legacy = [];
+    const seenSelect = new Set();
+
+    for (const match of source.matchAll(/`([\s\S]*?)`/g)) {
+        const body = match[1].trim();
+        if (!body || !/\bSELECT\b/i.test(body) || seenSelect.has(body)) {
+            continue;
+        }
+        seenSelect.add(body);
+        withSelect.push({
+            text: body,
+            start: match.index,
+            end: match.index + match[0].length
+        });
+    }
+
+    for (const match of source.matchAll(/query\s*:\s*`([\s\S]*?)`/g)) {
+        const body = match[1].trim();
+        if (!body || seenSelect.has(body)) {
+            continue;
+        }
+        legacy.push({
+            text: body,
+            start: match.index,
+            end: match.index + match[0].length
+        });
+    }
+
+    const chosen = chooseSuiteQLBlock(withSelect, options.offset) || chooseSuiteQLBlock(legacy, options.offset);
+    return chosen ? [chosen] : [];
 }
 
 function finding(line, message, severity, code) {
@@ -100,5 +155,6 @@ module.exports = {
     analyzeSuiteQLText,
     analyzeSuiteQLInJavaScript,
     extractSuiteQLBlocks,
+    normalizeSuiteQLSelection,
     SUITEQL_KEYWORDS
 };
