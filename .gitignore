@@ -1,4 +1,4 @@
 node_modules/
-*-current.vsix
+*.vsix
 .vscode-test/
 test-results/

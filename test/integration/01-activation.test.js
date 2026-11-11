@@ -16,7 +16,7 @@ describe('ativação', () => {
         assert.strictEqual(extension.id, EXTENSION_ID);
         assert.strictEqual(extension.packageJSON.publisher, 'alexandrejcorrea');
         assert.strictEqual(extension.packageJSON.name, 'ns-js-snippets-reload');
-        assert.strictEqual(extension.packageJSON.version, '0.7.0');
+        assert.strictEqual(extension.packageJSON.version, '0.7.1');
 
         if (extension.isActive) {
             await check('ativação da extensão', async () => {

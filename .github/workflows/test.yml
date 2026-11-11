@@ -2,9 +2,9 @@ name: test
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 permissions:
   contents: read
@@ -83,9 +83,15 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx vsce package --out ns-js-snippets-reload-0.7.0.vsix
+      - name: Empacotar VSIX
+        id: package
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          npx @vscode/vsce package --out "ns-js-snippets-reload-${version}.vsix"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
-          name: ns-js-snippets-reload-0.7.0
-          path: ns-js-snippets-reload-0.7.0.vsix
+          name: ns-js-snippets-reload-${{ steps.package.outputs.version }}
+          path: ns-js-snippets-reload-${{ steps.package.outputs.version }}.vsix
           if-no-files-found: error
