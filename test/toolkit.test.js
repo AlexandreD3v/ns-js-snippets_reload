@@ -158,14 +158,16 @@ function testUrlsJestAndRegistration() {
     for (const item of pkg.contributes.snippets) {
         assert.strictEqual(item.path, './snippets/snippets.code-snippets');
     }
+    const english = require('../package.nls.json');
     const paletteByCommand = new Map(pkg.contributes.menus.commandPalette.map((item) => [item.command, item]));
     for (const command of pkg.contributes.commands) {
         assert.strictEqual(command.category, 'NetSuite', command.command);
+        const title = resolveNls(command.title, english);
         assert.ok(
-            !command.title.toLowerCase().startsWith('netsuite'),
-            `${command.command} repete a categoria no título: ${command.title}`
+            !title.toLowerCase().startsWith('netsuite'),
+            `${command.command} repete a categoria no título: ${title}`
         );
-        const label = `${command.category}: ${command.title}`;
+        const label = `${command.category}: ${title}`;
         assert.strictEqual(label.indexOf('NetSuite:'), 0, label);
         assert.strictEqual(label.indexOf('NetSuite:', 'NetSuite:'.length), -1, label);
         const menu = paletteByCommand.get(command.command);
@@ -178,12 +180,12 @@ function testUrlsJestAndRegistration() {
     }
     assert.strictEqual(pkg.contributes.configuration.properties['netsuite.debugRatingPrompt'].default, false);
     assert.strictEqual(pkg.name, 'ns-js-snippets-reload');
-    assert.strictEqual(pkg.displayName, 'SuiteScript Toolkit for NetSuite');
+    assert.strictEqual(resolveNls(pkg.displayName, english), 'SuiteScript Toolkit for NetSuite');
     assert.strictEqual(pkg.version, '0.7.1');
     assert.strictEqual(pkg.license, 'GPL-3.0-only');
     assert.strictEqual(pkg.homepage, 'https://github.com/AlexandreD3v/ns-js-snippets_reload#readme');
     assert.strictEqual(pkg.bugs.url, 'https://github.com/AlexandreD3v/ns-js-snippets_reload/issues');
-    assert.match(pkg.description, /toolkit/i);
+    assert.match(resolveNls(pkg.description, english), /toolkit/i);
     for (const keyword of ['netsuite', 'suitescript', 'suiteql', 'sdf', 'suitecloud']) {
         assert.ok(pkg.keywords.includes(keyword), keyword);
     }
@@ -207,8 +209,48 @@ function testUrlsJestAndRegistration() {
     }
 }
 
+function resolveNls(value, catalog) {
+    const match = typeof value === 'string' ? value.match(/^%([^%]+)%$/) : null;
+    return match ? catalog[match[1]] : value;
+}
+
+function testManifestLocalization() {
+    const pkg = require('../package.json');
+    const english = require('../package.nls.json');
+    const portuguese = require('../package.nls.pt-br.json');
+    const readme = fs.readFileSync(path.join(__dirname, '../README.md'), 'utf8');
+    const readmePt = fs.readFileSync(path.join(__dirname, '../README.pt-BR.md'), 'utf8');
+    const referenced = [...fs.readFileSync(path.join(__dirname, '../package.json'), 'utf8').matchAll(/%([^%]+)%/g)]
+        .map((match) => match[1]);
+    assert.deepStrictEqual(Object.keys(english).sort(), Object.keys(portuguese).sort());
+    assert.deepStrictEqual(Object.keys(english).sort(), [...new Set(referenced)].sort());
+    for (const key of Object.keys(english)) {
+        assert.strictEqual(typeof english[key], 'string', key);
+        assert.strictEqual(typeof portuguese[key], 'string', key);
+        assert.ok(english[key].trim(), key);
+        assert.ok(portuguese[key].trim(), key);
+    }
+    assert.strictEqual(english.displayName, 'SuiteScript Toolkit for NetSuite');
+    assert.strictEqual(portuguese.displayName, 'SuiteScript Toolkit para NetSuite');
+    for (const command of pkg.contributes.commands) {
+        const key = command.title.slice(1, -1);
+        assert.strictEqual(english[key] && portuguese[key] && command.title, `%${key}%`);
+        assert.ok(!portuguese[key].toLowerCase().startsWith('netsuite'), portuguese[key]);
+    }
+    for (const tool of pkg.contributes.languageModelTools) {
+        assert.ok(!tool.modelDescription.startsWith('%'), tool.name);
+        assert.ok(tool.userDescription.startsWith('%lm.'), tool.name);
+    }
+    assert.ok(readme.includes('README.pt-BR.md'));
+    assert.ok(readmePt.includes('README.md'));
+    assert.ok(readmePt.includes('`map`'));
+    assert.ok(readmePt.includes('`get`'));
+    assert.ok(readmePt.includes('`post`'));
+}
+
 testImports();
 testSuiteQLInsert();
 testScriptPathsAndFields();
 testUrlsJestAndRegistration();
+testManifestLocalization();
 console.log('Toolkit tests passed.');

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Localize the manifest in English and Brazilian Portuguese (`package.nls.json` and `package.nls.pt-br.json`): display name, description, command titles, setting descriptions, and language-model tool labels. Snippet prefixes are unchanged. Runtime messages stay in English until `vscode.l10n`.
+- Add `README.pt-BR.md` and link it from the English README. The Marketplace page stays the English README.
+
 ## 0.7.1
 
 - Marketplace display name is now **SuiteScript Toolkit for NetSuite**. The extension id and the `name` field stay `alexandrejcorrea.ns-js-snippets-reload`.

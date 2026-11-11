@@ -1,5 +1,7 @@
 # SuiteScript Toolkit for NetSuite
 
+**English** · [Português (Brasil)](README.pt-BR.md)
+
 **SuiteScript 2.x toolkit for VS Code** — snippets, smart autocomplete, hover help, SuiteQL, diagnostics, and SDF/SuiteCloud helpers while you write NetSuite JavaScript.
 
 The Marketplace id stays `alexandrejcorrea.ns-js-snippets-reload`.

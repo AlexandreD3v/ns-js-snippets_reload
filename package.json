@@ -1,8 +1,8 @@
 {
     "name": "ns-js-snippets-reload",
-    "displayName": "SuiteScript Toolkit for NetSuite",
+    "displayName": "%displayName%",
     "publisher": "alexandrejcorrea",
-    "description": "SuiteScript toolkit for NetSuite: snippets, N/* autocomplete, SuiteQL, 2.1 migration, SDF/SuiteCloud CLI, governance diagnostics, and optional AI context tools.",
+    "description": "%description%",
     "version": "0.7.1",
     "license": "GPL-3.0-only",
     "keywords": [
@@ -87,147 +87,147 @@
         "commands": [
             {
                 "command": "netsuite.newScript",
-                "title": "New Script from Template",
+                "title": "%command.newScript.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.insertScriptParameters",
-                "title": "Insert Script Parameters Block",
+                "title": "%command.insertScriptParameters.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.wrapSelectionInDefine",
-                "title": "Wrap Selection in define()",
+                "title": "%command.wrapSelectionInDefine.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.validateFile",
-                "title": "Validate SuiteScript File",
+                "title": "%command.validateFile.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.reloadCustomFields",
-                "title": "Reload Custom Field Suggestions",
+                "title": "%command.reloadCustomFields.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.createCustomFieldsConfig",
-                "title": "Create Custom Fields Config Example",
+                "title": "%command.createCustomFieldsConfig.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.auditWorkspace21",
-                "title": "Audit Workspace for SuiteScript 2.1",
+                "title": "%command.auditWorkspace21.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.convertCurrentScript21",
-                "title": "Convert Current Script to 2.1 (Preview)",
+                "title": "%command.convertCurrentScript21.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.convertWorkspace21",
-                "title": "Convert Workspace Scripts to 2.1",
+                "title": "%command.convertWorkspace21.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.createSuiteQLQuery",
-                "title": "New SuiteQL Query File",
+                "title": "%command.createSuiteQLQuery.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.extractSuiteQLToFile",
-                "title": "Extract SuiteQL from JavaScript",
+                "title": "%command.extractSuiteQLToFile.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.insertSuiteQLAsNQuery",
-                "title": "Insert SuiteQL as N/query Block",
+                "title": "%command.insertSuiteQLAsNQuery.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.createSuiteQLSchema",
-                "title": "Create SuiteQL Schema Config Example",
+                "title": "%command.createSuiteQLSchema.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudValidate",
-                "title": "SuiteCloud Validate Project",
+                "title": "%command.suitecloudValidate.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudDeploy",
-                "title": "SuiteCloud Deploy Project",
+                "title": "%command.suitecloudDeploy.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudUpload",
-                "title": "SuiteCloud Upload File",
+                "title": "%command.suitecloudUpload.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudCreateProject",
-                "title": "SuiteCloud Create Project",
+                "title": "%command.suitecloudCreateProject.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudAccountSetup",
-                "title": "SuiteCloud Account Setup",
+                "title": "%command.suitecloudAccountSetup.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudImportObject",
-                "title": "SuiteCloud Import Object",
+                "title": "%command.suitecloudImportObject.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudImportFile",
-                "title": "SuiteCloud Import File",
+                "title": "%command.suitecloudImportFile.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.suitecloudOpenRelatedObject",
-                "title": "Open Related SDF Script Object",
+                "title": "%command.suitecloudOpenRelatedObject.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.copyScriptForUpload",
-                "title": "Copy Script for Manual Upload",
+                "title": "%command.copyScriptForUpload.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.openScriptRecordUrl",
-                "title": "Open Script Record URL",
+                "title": "%command.openScriptRecordUrl.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.copyAiContext",
-                "title": "Copy Sanitized AI Context",
+                "title": "%command.copyAiContext.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.configureDeveloperAssistant",
-                "title": "Configure Developer Assistant (Terminal)",
+                "title": "%command.configureDeveloperAssistant.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.addModuleImport",
-                "title": "Add N/* Module Import",
+                "title": "%command.addModuleImport.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.goToFieldDefinition",
-                "title": "Go to Custom Field Definition",
+                "title": "%command.goToFieldDefinition.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.scaffoldJestTest",
-                "title": "Scaffold Jest Test for Script",
+                "title": "%command.scaffoldJestTest.title%",
                 "category": "NetSuite"
             },
             {
                 "command": "netsuite.debugShowRatingPrompt",
-                "title": "Preview Rating Reminder",
+                "title": "%command.debugShowRatingPrompt.title%",
                 "category": "NetSuite"
             }
         ],
@@ -356,12 +356,12 @@
             ]
         },
         "configuration": {
-            "title": "NetSuite SuiteScript",
+            "title": "%config.title%",
             "properties": {
                 "netsuite.defaultApiVersion": {
                     "type": "string",
                     "default": "2.1",
-                    "description": "Default @NApiVersion value used in generated script templates."
+                    "description": "%config.defaultApiVersion.description%"
                 },
                 "netsuite.defaultModuleScope": {
                     "type": "string",
@@ -370,62 +370,62 @@
                         "SameAccount",
                         "Public"
                     ],
-                    "description": "Default @NModuleScope value used in generated script templates."
+                    "description": "%config.defaultModuleScope.description%"
                 },
                 "netsuite.enableDiagnostics": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Show SuiteScript validation warnings in JavaScript files."
+                    "description": "%config.enableDiagnostics.description%"
                 },
                 "netsuite.enableGovernanceDiagnostics": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Show governance usage hints (search/query limits) in JavaScript files."
+                    "description": "%config.enableGovernanceDiagnostics.description%"
                 },
                 "netsuite.customFieldsPath": {
                     "type": "string",
                     "default": ".vscode/netsuite-fields.json",
-                    "description": "Workspace-relative path to JSON file with custom field IDs for autocomplete."
+                    "description": "%config.customFieldsPath.description%"
                 },
                 "netsuite.sdfFieldDiscovery": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Merge custom field IDs discovered from SDF object XML in the SuiteCloud project."
+                    "description": "%config.sdfFieldDiscovery.description%"
                 },
                 "netsuite.suiteqlSchemaPath": {
                     "type": "string",
                     "default": ".vscode/netsuite-suiteql-schema.json",
-                    "description": "Workspace-relative path to optional SuiteQL schema overrides for completion and diagnostics."
+                    "description": "%config.suiteqlSchemaPath.description%"
                 },
                 "netsuite.suitecloudPath": {
                     "type": "string",
                     "default": "suitecloud",
-                    "description": "SuiteCloud CLI executable name or path used by NetSuite deploy/validate commands."
+                    "description": "%config.suitecloudPath.description%"
                 },
                 "netsuite.suitecloudValidateBeforeDeploy": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Run project:validate before project:deploy when using NetSuite: SuiteCloud Deploy Project."
+                    "description": "%config.suitecloudValidateBeforeDeploy.description%"
                 },
                 "netsuite.scriptRecordUrlTemplate": {
                     "type": "string",
                     "default": "",
-                    "description": "Optional URL template to open a script record in the browser. Use {scriptId} as the placeholder. {id} is also accepted."
+                    "description": "%config.scriptRecordUrlTemplate.description%"
                 },
                 "netsuite.debugRatingPrompt": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Show the command NetSuite: Preview Rating Reminder so the Marketplace prompt can be tried without changing the normal reminder schedule or saved answers."
+                    "description": "%config.debugRatingPrompt.description%"
                 }
             }
         },
         "languageModelTools": [
             {
                 "name": "netsuite_get_script_context",
-                "displayName": "Get NetSuite script context",
+                "displayName": "%lm.getScriptContext.displayName%",
                 "toolReferenceName": "netsuiteScriptContext",
                 "modelDescription": "Read sanitized context for the active SuiteScript or SuiteQL editor: annotations, imported N/* modules, diagnostics, migration notes, and SDF metadata. Does not return secrets or credentials.",
-                "userDescription": "Read the active NetSuite file context",
+                "userDescription": "%lm.getScriptContext.userDescription%",
                 "icon": "$(file-code)",
                 "tags": ["netsuite"],
                 "canBeReferencedInPrompt": true,
@@ -437,10 +437,10 @@
             },
             {
                 "name": "netsuite_analyze_suitescript",
-                "displayName": "Analyze SuiteScript",
+                "displayName": "%lm.analyzeSuiteScript.displayName%",
                 "toolReferenceName": "netsuiteAnalyzeSuiteScript",
                 "modelDescription": "Return SuiteScript diagnostics and 2.1 migration notes for the active editor. Does not modify the file.",
-                "userDescription": "Analyze the active SuiteScript file",
+                "userDescription": "%lm.analyzeSuiteScript.userDescription%",
                 "icon": "$(warning)",
                 "tags": ["netsuite"],
                 "canBeReferencedInPrompt": true,
@@ -452,10 +452,10 @@
             },
             {
                 "name": "netsuite_get_suiteql_schema",
-                "displayName": "Get SuiteQL schema",
+                "displayName": "%lm.getSuiteQLSchema.displayName%",
                 "toolReferenceName": "netsuiteSuiteQLSchema",
                 "modelDescription": "Return the local SuiteQL table and column hints available to the extension for the active workspace. This is bundled metadata plus optional workspace overrides, not a live NetSuite account schema.",
-                "userDescription": "Read the local SuiteQL schema hints",
+                "userDescription": "%lm.getSuiteQLSchema.userDescription%",
                 "icon": "$(database)",
                 "tags": ["netsuite"],
                 "canBeReferencedInPrompt": true,
@@ -467,10 +467,10 @@
             },
             {
                 "name": "netsuite_get_sdf_context",
-                "displayName": "Get SDF context",
+                "displayName": "%lm.getSdfContext.displayName%",
                 "toolReferenceName": "netsuiteSdfContext",
                 "modelDescription": "Return SuiteCloud project paths and SDF object metadata discovered locally for the active file. Does not call NetSuite or the SuiteCloud CLI.",
-                "userDescription": "Read local SDF project context",
+                "userDescription": "%lm.getSdfContext.userDescription%",
                 "icon": "$(files)",
                 "tags": ["netsuite"],
                 "canBeReferencedInPrompt": true,
