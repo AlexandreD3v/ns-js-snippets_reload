@@ -12,7 +12,7 @@ Registro do que avançou na branch `develop`. O P0 (deploy, upload, extract Suit
 | 2026-11-11 | Bundling com esbuild | adiado; análise na fase 1 do roteiro. VSIX de 2.078.545 bytes / 566 arquivos para 1.055.413 bytes / 317 arquivos | [#12](https://github.com/AlexandreD3v/ns-js-snippets_reload/pull/12) |
 | 2026-11-11 | CI de teste também em `develop`, sem workflow de publicação | feito | [#12](https://github.com/AlexandreD3v/ns-js-snippets_reload/pull/12) |
 | — | Publicação por tag (Marketplace e Open VSX) | não iniciado; depende de `VSCE_PAT`, `OVSX_PAT` e do P0 em `develop` | — |
-| — | Localização (`package.nls.json`, `package.nls.pt-br.json`, `README.pt-BR.md`) | não iniciado; próximo lote recomendado | — |
+| 2026-11-11 | Localização do manifesto (`package.nls.json`, `package.nls.pt-br.json`) e `README.pt-BR.md`. `vscode.l10n` de runtime ficou para a fase de TypeScript | feito | [#13](https://github.com/AlexandreD3v/ns-js-snippets_reload/pull/13) |
 | — | TypeScript (ativação, providers, plugin `typescript` do Babel, snippets do repositório irmão) e `vscode.l10n` | não iniciado | — |
 | — | Zero-config e walkthrough | não iniciado | — |
 | — | Times: contas na status bar, `scope`, seção For teams, severidade, `npx` da auditoria 2.1 | não iniciado | — |

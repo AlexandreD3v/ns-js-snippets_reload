@@ -23,7 +23,7 @@ Nenhuma fase daqui pode chamar uma conta NetSuite real. `npm test` e `npm run te
 | --- | --- | --- |
 | P1 | 1. Preparação da 0.7.1 | feito neste lote |
 | P1 | 2. Publicação por tag | bloqueada (secrets e P0) |
-| P1 | 3. Localização do manifesto e dos READMEs | próximo lote recomendado |
+| P1 | 3. Localização do manifesto e dos READMEs | feito; `vscode.l10n` continua na fase 4 |
 | P1 | 4. TypeScript, com `vscode.l10n` no código novo | depois da fase 3 |
 | P2 | 5. Zero-config e walkthrough | não iniciado |
 | P2 | 6. Times | não iniciado |
@@ -86,12 +86,9 @@ Os nomes dos secrets são `VSCE_PAT` e `OVSX_PAT`. Quem cria é o dono do publis
 
 ## Fase 3 — Localização do manifesto e dos READMEs
 
-Próximo lote recomendado. Não depende de secret, não chama conta NetSuite e não reescreve os arquivos que o P0 está mexendo.
+Entregue no lote seguinte à preparação da 0.7.1. `package.nls.json` é o inglês padrão e `package.nls.pt-br.json` é o pt-BR (o id de idioma do VS Code é `pt-br`). O `displayName`, a descrição, os títulos de comando, o título da configuração, as descrições de setting e os rótulos visíveis das ferramentas de modelo usam chaves `%...%`. `modelDescription` permanece em inglês, porque é instrução para o modelo, não texto da interface. Os prefixos de snippet não foram traduzidos.
 
-- `package.nls.json` é o inglês padrão. `package.nls.pt-br.json` é o pt-BR (o id de idioma do VS Code é `pt-br`).
-- Títulos de comando, descrições, título da configuração e descrições de setting no `package.json` passam a usar chaves `%...%`.
-- `README.md` continua em inglês e é a página do Marketplace. Criar `README.pt-BR.md` e apontar um link no README inglês. O Marketplace não troca o README pela locale sozinho.
-- Não traduzir prefixos de snippet nem o corpo que é código.
+`README.md` continua em inglês e é a página do Marketplace. `README.pt-BR.md` está no repositório, com link nos dois sentidos. O Marketplace não troca o README pela locale sozinho.
 
 O `vscode.l10n` das mensagens de runtime não entra neste lote. Os providers vão ser reescritos em TypeScript na fase 4; embrulhar as strings agora e de novo na migração é trabalho dobrado. As mensagens de deploy, upload, extract SuiteQL, `.sql` e lembrete de avaliação ficam de fora até o P0 chegar em `develop`, mesmo que alguém antecipe o `l10n`.
 
