@@ -177,6 +177,27 @@ function testUrlsJestAndRegistration() {
         }
     }
     assert.strictEqual(pkg.contributes.configuration.properties['netsuite.debugRatingPrompt'].default, false);
+    assert.strictEqual(pkg.name, 'ns-js-snippets-reload');
+    assert.strictEqual(pkg.displayName, 'SuiteScript Toolkit for NetSuite');
+    assert.strictEqual(pkg.version, '0.7.1');
+    assert.strictEqual(pkg.license, 'GPL-3.0-only');
+    assert.strictEqual(pkg.homepage, 'https://github.com/AlexandreD3v/ns-js-snippets_reload#readme');
+    assert.strictEqual(pkg.bugs.url, 'https://github.com/AlexandreD3v/ns-js-snippets_reload/issues');
+    assert.match(pkg.description, /toolkit/i);
+    for (const keyword of ['netsuite', 'suitescript', 'suiteql', 'sdf', 'suitecloud']) {
+        assert.ok(pkg.keywords.includes(keyword), keyword);
+    }
+    assert.deepStrictEqual(pkg.categories, ['Snippets', 'Programming Languages', 'Linters']);
+    assert.ok(pkg.devDependencies['@vscode/vsce']);
+    assert.strictEqual(pkg.devDependencies.vsce, undefined);
+    const ignore = fs.readFileSync(path.join(__dirname, '../.vscodeignore'), 'utf8');
+    const gitignore = fs.readFileSync(path.join(__dirname, '../.gitignore'), 'utf8');
+    for (const pattern of ['**/*.vsix', '**/*.map', 'test/**', 'docs/**', '.github/**']) {
+        assert.ok(ignore.includes(pattern), pattern);
+    }
+    assert.match(gitignore, /^\*\.vsix$/m);
+    assert.strictEqual(fs.existsSync(path.join(__dirname, '../ns-js-snippets-reload-0.1.0.vsix')), false);
+    assert.strictEqual(fs.existsSync(path.join(__dirname, '../ns-js-snippets-reload-0.1.1.vsix')), false);
     const toolNames = pkg.contributes.languageModelTools.map((tool) => tool.name).sort();
     assert.deepStrictEqual(toolNames, [...LM_TOOL_NAMES].sort());
     for (const tool of pkg.contributes.languageModelTools) {

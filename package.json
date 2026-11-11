@@ -1,10 +1,26 @@
 {
     "name": "ns-js-snippets-reload",
-    "displayName": "Netsuite - JS Snippets Reload",
+    "displayName": "SuiteScript Toolkit for NetSuite",
     "publisher": "alexandrejcorrea",
-    "description": "NetSuite SuiteScript 2.x snippets, N/* autocomplete, SuiteQL workbench, 2.1 migration, SDF/SuiteCloud CLI, governance diagnostics, and optional AI context tools.",
-    "version": "0.7.0",
+    "description": "SuiteScript toolkit for NetSuite: snippets, N/* autocomplete, SuiteQL, 2.1 migration, SDF/SuiteCloud CLI, governance diagnostics, and optional AI context tools.",
+    "version": "0.7.1",
     "license": "GPL-3.0-only",
+    "keywords": [
+        "netsuite",
+        "suitescript",
+        "suiteql",
+        "sdf",
+        "suitecloud",
+        "oracle",
+        "erp",
+        "governance",
+        "javascript",
+        "snippets"
+    ],
+    "homepage": "https://github.com/AlexandreD3v/ns-js-snippets_reload#readme",
+    "bugs": {
+        "url": "https://github.com/AlexandreD3v/ns-js-snippets_reload/issues"
+    },
     "engines": {
         "vscode": "^1.85.0"
     },
@@ -20,7 +36,8 @@
     ],
     "categories": [
         "Snippets",
-        "Programming Languages"
+        "Programming Languages",
+        "Linters"
     ],
     "scripts": {
         "test": "node test/ratingPrompt.test.js && node test/tier2.test.js && node test/foundation.test.js && node test/migration.test.js && node test/suiteql.test.js && node test/toolkit.test.js",
@@ -468,7 +485,7 @@
     "devDependencies": {
         "@vscode/test-cli": "^0.0.15",
         "@vscode/test-electron": "^3.1.0",
-        "vsce": "^2.2.0"
+        "@vscode/vsce": "^4.1.0"
     },
     "dependencies": {
         "@babel/parser": "^7.29.9",

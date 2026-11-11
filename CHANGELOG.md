@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.7.1
+
+- Marketplace display name is now **SuiteScript Toolkit for NetSuite**. The extension id and the `name` field stay `alexandrejcorrea.ns-js-snippets-reload`.
+- Description, keywords, and categories present the extension as a SuiteScript toolkit (snippets, the SuiteQL language, and diagnostics).
+- `bugs` and `homepage` point at the GitHub repository. The SPDX license stays `GPL-3.0-only`.
+- Package with `@vscode/vsce` instead of the deprecated `vsce` package.
+- `.vscodeignore` keeps tests, CI files, internal docs, source maps, and TypeScript declarations out of the VSIX. Committed `.vsix` files were removed from the repository, and `*.vsix` is gitignored.
 - Load the existing SuiteScript snippets in TypeScript, JavaScript React, and TypeScript React files. Snippet prefixes are unchanged.
 - Show each command once in the palette as `NetSuite: <title>`. Titles no longer repeat the NetSuite category.
 - Fix SuiteScript 2.1 preview and workspace conversion so only real SuiteScript edits are saved.

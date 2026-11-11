@@ -1,6 +1,8 @@
-# NetSuite – JS Snippets Reload
+# SuiteScript Toolkit for NetSuite
 
-**SuiteScript 2.x productivity for VS Code** — snippets, smart autocomplete, hover help, and lightweight validation while you write NetSuite JavaScript.
+**SuiteScript 2.x toolkit for VS Code** — snippets, smart autocomplete, hover help, SuiteQL, diagnostics, and SDF/SuiteCloud helpers while you write NetSuite JavaScript.
+
+The Marketplace id stays `alexandrejcorrea.ns-js-snippets-reload`.
 
 Works in any `.js` file. Activates when you edit JavaScript (typical SuiteScript 2.x AMD modules with `define([...], function () { ... })`).
 
@@ -211,7 +213,7 @@ Search **“netsuite”** in VS Code Settings.
 
 ## Rate this extension
 
-If **NetSuite – JS Snippets Reload** saves you time, a quick rating on the Visual Studio Marketplace helps other NetSuite developers discover it and supports continued updates.
+If **SuiteScript Toolkit for NetSuite** saves you time, a quick rating on the Visual Studio Marketplace helps other NetSuite developers discover it and supports continued updates.
 
 **[Leave a rating or review on the Marketplace](https://marketplace.visualstudio.com/items?itemName=alexandrejcorrea.ns-js-snippets-reload&ssr=false#review-details)**
 
@@ -243,12 +245,12 @@ The extension may show a reminder after real use (about seven days and several s
 
 Snippets live in `snippets/snippets.code-snippets`. Autocomplete, hover, and diagnostics share JSON under `data/` and providers under `src/`. Optional MCP stub: `mcp/server.js`.
 
-Package a VSIX locally:
+Package a VSIX locally (Node.js 22+, `@vscode/vsce`):
 
 ```powershell
 npm install
 npm test
-node_modules\.bin\vsce.cmd package
+npx @vscode/vsce package
 ```
 
 Install with **Extensions: Install from VSIX…**, or press **F5** to run an Extension Development Host.

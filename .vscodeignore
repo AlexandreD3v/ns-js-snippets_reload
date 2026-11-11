@@ -1,0 +1,21 @@
+# Desenvolvimento, CI e documentação interna. Não fazem parte da extensão instalada.
+.vscode/**
+.vscode-test/**
+.git/**
+.github/**
+test/**
+test-results/**
+scripts/**
+docs/**
+.vscode-test.js
+.gitignore
+**/.DS_Store
+**/*.vsix
+
+# Mapas, declarações e anotações de fluxo do Babel. O host executa o JavaScript.
+**/*.map
+**/*.d.ts
+**/*.js.flow
+node_modules/**/*.md
+node_modules/**/test/**
+node_modules/**/tests/**
